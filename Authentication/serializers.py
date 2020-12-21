@@ -32,3 +32,18 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def __str__(self):
         return Account
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+    token = serializers.CharField(allow_blank=True, read_only=True)
+
+    class Meta:
+        model = Account
+        fields = ['email', 'password', 'token',]
+        extra_kwargs = {
+            'password':{'write_only':True}
+        }
+    def validate(self, data):
+        return data

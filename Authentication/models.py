@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class AccountManager(BaseUserManager):
 
-    def create_user(self, email, first_name, last_name, phone_number, password):
+    def create_user(self, email, first_name, last_name, phone_number, password=None):
 
         if not email:
             return ValueError('Email field is empty')

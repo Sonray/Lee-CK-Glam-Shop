@@ -5,6 +5,10 @@ from rest_framework.views import APIView
 from .serializers import RegisterSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions
+from django.conf import settings
+from django.contrib import auth
+import jwt
+from rest_framework import status
 
 # Create your views here.
 
@@ -26,3 +30,31 @@ class RegisterUser(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@permission_classes((permissions.AllowAny,))
+class LoginUser(APIView):
+
+    def post(self, request):
+
+        data = request.data
+
+        email = data.get('email','')
+        password = data.get('password','')
+
+        user = auth.authenticate(email=email, password=password)
+
+        if user:
+            auth_token = jwt.encode(
+                {
+                    'username':user.email
+                }, settings.JWT_SECRET_KEY
+            )
+
+            serializer = RegisterSerializer(user)
+
+            data = {
+                'user': serializer.data, 'token':auth_token
+            }
+            return Response(
+                data, status=status.HTTP_200_OK
+                )
+        return Response({'detail':'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST,)

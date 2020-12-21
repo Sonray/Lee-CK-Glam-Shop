@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
-from .views import RegisterUser
+from .views import RegisterUser, LoginUser
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
 
     url(r'/register/', RegisterUser.as_view(), name='register'),
+    url(r'/login/', LoginUser.as_view(), name='Login'),
 
 ]
 if settings.DEBUG:
