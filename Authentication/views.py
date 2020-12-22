@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import auth
 import jwt
 from rest_framework import status
+import bcrypt
 
 # Create your views here.
 
@@ -23,7 +24,9 @@ class RegisterUser(APIView):
         serializers = self.serializer_class(data=user)
 
         if serializers.is_valid(raise_exception=True):
+
             serializers.save()
+
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
                 )
@@ -40,7 +43,7 @@ class LoginUser(APIView):
         email = data.get('email','')
         password = data.get('password','')
 
-        user = auth.authenticate(email=email, password=password)
+        user = auth.authenticate(email=email, password=login_password)
 
         if user:
             auth_token = jwt.encode(
