@@ -78,17 +78,17 @@ class ResetPassword(APIView):
     def post(self, request):
         
         serializer = self.serializer_class(data=request.data)        
-        email = request.data('email','')
+        email = request.data['email']
         
         if Account.objects.filter(email=email).exists:
             user                = Account.objects.get(email=email)
-            user_id_encode      = urlsafe_base64_encode(user.id)
+            user_id_encode      = urlsafe_base64_encode( smart_bytes(user.id))
             token               = PasswordResetTokenGenerator().make_token(user)
             
             current_site        = get_current_site(request=request).domain
             reversal_link       = reverse('reset-password', kwargs={'user_id_encode':user_id_encode, 'token':token})
             the_url             = 'http://' + current_site + reversal_link
-            email_body          = 'Hi '+ user.username+' use the link below to change your password \n'
+            email_body          = 'Hi '+ user.first_name +' '+ user.last_name +' use the link below to change your password \n'  + the_url
             data                = {'email_body':email_body, 'to_email':user.email, 'email_subject':'Change account password'}
             
             
@@ -99,5 +99,11 @@ class ResetPassword(APIView):
 class PasswordTokenCheck(APIView):
     
     def get(self, request, user_id_encode, token):
-        pass
+        
+        try:
+            
+            user_id = 
+            
+        except :
+            pass
         

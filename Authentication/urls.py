@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'register/', RegisterUser.as_view(), name='register'),
     url(r'login/', LoginUser.as_view(), name='Login'),
     url(r'reset-email/', ResetPassword.as_view(), name='reset-email'),
-    url(r'reset-password/<user_id_encode>/<token>/', PasswordTokenCheck.as_view(), name='reset-password'),
+    path('reset-password/<user_id_encode>/<token>/', PasswordTokenCheck.as_view(), name='reset-password'),
     
 
 ]
