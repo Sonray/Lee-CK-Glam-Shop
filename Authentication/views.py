@@ -2,13 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer, ResetPasswordSerializer
+from .serializers import RegisterSerializer, ResetPasswordSerializer, SetPasswordSerializer
 from rest_framework.decorators import permission_classes
-from rest_framework import permissions
+from rest_framework import permissions, generics, status
 from django.conf import settings
 from django.contrib import auth
 import jwt
-from rest_framework import status
 import bcrypt
 from .util import Util
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -96,14 +95,40 @@ class ResetPassword(APIView):
             
         return Response({'success':'We have sent you the link to change your password in your email'}, status=status.HTTP_200_OK)
 
+
+@permission_classes((permissions.AllowAny,))
 class PasswordTokenCheck(APIView):
     
     def get(self, request, user_id_encode, token):
         
         try:
             
-            user_id = 
+            user_id = smart_str(urlsafe_base64_decode( user_id_encode ))
+            user = Account.objects.get(id=user_id)
             
-        except :
-            pass
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'error': 'Token is not valid, please request for a new token'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+            return Response ({'success': True, 'message': 'valid credentials', 'user_id_encode': user_id_encode, 'token': token}, status=status.HTTP_200_OK)
+            
+        except DjangoUnicodeDecodeError as identifier :
+            
+            return Response({'error': 'Token is not valid, please request for a new token'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+    
+
+@permission_classes((permissions.AllowAny,))
+class SetPassword(APIView):
+    
+    serializer_class = SetPasswordSerializer
+    
+    def patch(self, request):
+        
+        serializer = self.serializer_class(data=request.data)        
+        
+        serializer.is_valid(raise_exception = True)
+        
+        return Response ({'success': True, 'message': 'Password reset successful'}, status=status.HTTP_200_OK)
+            
+        
         
