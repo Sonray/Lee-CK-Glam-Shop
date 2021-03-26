@@ -15,6 +15,9 @@ from decouple import config,Csv
 import os
 # import django_heroku
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -182,3 +186,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER =  config ('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config ('EMAIL_PASSWORD')
+
+
+cloudinary.config( 
+  cloud_name = "davidokwacha", 
+  api_key = "249499456836479", 
+  api_secret = "QUX6EW-EcG0IjqevYKE4jpfGEew" 
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

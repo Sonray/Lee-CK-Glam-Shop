@@ -1,6 +1,6 @@
 from django.db import models
 from  Authentication.models import  Account
-from django.db.models import CharField
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -26,17 +26,17 @@ class Whats_packaged(models.Model):
 
 
 class  Product_details(models.Model):
-    product_image       = models.ImageField( blank=False)
-    product_name        = models.CharField( blank=False)
-    category            = models.CharField( blank=False)
-    sub_category        = models.CharField( blank=False)
+    product_image       = CloudinaryField('LeeGlam/', blank=False)
+    product_name        = models.CharField( blank=False, max_length=120)
+    category            = models.CharField( blank=False, max_length=120)
+    sub_category        = models.CharField( blank=False, max_length=120)
     admin_id            = models.ForeignKey( Account, on_delete=models.SET_NULL, blank= True , null=True , related_name="product_upload_admin")
     date_uploaded       = models.DateTimeField( auto_now_add = True, null =True)
     
     old_price           = models.IntegerField()
     new_price           = models.IntegerField()
-    product_description = models.CharField()
-    key_features        = models.ManyToManyField(key_features, blank=True)
+    product_description = models.TextField()
+    key_features        = models.ManyToManyField(Key_features, blank=True)
     in_the_box          = models.ManyToManyField(Whats_packaged, blank=True)
     specifications      = models.ManyToManyField(Product_specifications, blank=True)
     
