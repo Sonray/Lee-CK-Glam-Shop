@@ -17,6 +17,14 @@ class  Product_specifications(models.Model):
     def __str__(self):
         return self.product_specification
 
+
+class Whats_packaged(models.Model):
+    in_the_box          = models.TextField()
+    
+    def __str__(self):
+        return self.in_the_box
+
+
 class  Product_details(models.Model):
     product_image       = models.ImageField( blank=False)
     product_name        = models.CharField( blank=False)
@@ -29,7 +37,8 @@ class  Product_details(models.Model):
     new_price           = models.IntegerField()
     product_description = models.CharField()
     key_features        = models.ManyToManyField(key_features, blank=True)
-    product_specifications = models.ManyToManyField(product_description, blank=True)
+    in_the_box          = models.ManyToManyField(Whats_packaged, blank=True)
+    specifications      = models.ManyToManyField(Product_specifications, blank=True)
     
     def __str__(self):
         return self.product_name + ' ' + self.category
@@ -39,7 +48,6 @@ class  Product_details(models.Model):
 
     def delete_product(self):
         self.delete()
-
     
     
 class Reviews(models.Model):
@@ -56,5 +64,3 @@ class Reviews(models.Model):
         self.delete()
 
 
-class  Order(models.Model):
-    pass
