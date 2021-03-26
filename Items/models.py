@@ -28,8 +28,8 @@ class Whats_packaged(models.Model):
 class  Product_details(models.Model):
     product_image       = CloudinaryField('LeeGlam/', blank=False)
     product_name        = models.CharField( blank=False, max_length=120)
-    category            = models.CharField( blank=False, max_length=120)
-    sub_category        = models.CharField( blank=False, max_length=120)
+    category            = models.ManyToManyField('Category', blank=False )
+    sub_category        = models.ManyToManyField('Sub_category', blank=False )
     admin_id            = models.ForeignKey( Account, on_delete=models.SET_NULL, blank= True , null=True , related_name="product_upload_admin")
     date_uploaded       = models.DateTimeField( auto_now_add = True, null =True)
     
@@ -62,5 +62,19 @@ class Reviews(models.Model):
 
     def delete_review(self):
         self.delete()
+
+
+class Category(models.Model):
+    category        = models.CharField(max_length=40)
+    
+    def __str__(self):
+        return self.in_the_box
+
+
+class Sub_category(models.Model):
+    sub_category        = models.CharField(max_length=40)
+    
+    def __str__(self):
+        return self.in_the_box
 
 
