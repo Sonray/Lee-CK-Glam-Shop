@@ -41,7 +41,7 @@ class  Product_details(models.Model):
     specifications      = models.ManyToManyField(Product_specifications, blank=True)
     
     def __str__(self):
-        return self.product_name + ' ' + self.category
+        return self.product_name
     
     def save_product(self):
         self.save()
