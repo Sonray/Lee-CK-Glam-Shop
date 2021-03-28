@@ -3,12 +3,11 @@ from django.conf.urls.static import static
 from django.conf.urls import url
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
+from .views import Display_all_products, Display_specific_product,Display_all_Reviews, Make_a_review
 
 urlpatterns = [
 
-    # url(r'/register/', name='register'),
-    # # url(r'/login/', name='Login'),
-    # path('reset-email', name='reset-email'),
+    path('display-products', Display_all_products.as_view(), name='display-products'),
     # path('reset-password/<user_id_encode>/<token>/', name='reset-password'),
     
 
