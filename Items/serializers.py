@@ -4,13 +4,16 @@ from django.utils import timezone
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    
+    
+    
     class Meta:
         model = Product_details
         fields = '__all__'
         depth = 1
         
         
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reviews
         fields = '__all__'

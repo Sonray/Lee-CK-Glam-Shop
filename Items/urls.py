@@ -8,7 +8,7 @@ from .views import Display_all_products, Display_specific_product,Display_all_Re
 urlpatterns = [
 
     path('display-products', Display_all_products.as_view(), name='display-products'),
-    # path('reset-password/<user_id_encode>/<token>/', name='reset-password'),
+    path('product/<int:pk>', Display_specific_product.as_view()),
     
 
 ]

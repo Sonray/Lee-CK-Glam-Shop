@@ -21,7 +21,26 @@ class Display_all_products(APIView):
 
 @permission_classes((permissions.AllowAny,))
 class Display_specific_product(APIView):
-    pass
+    
+    def get_object(self,pk):
+        '''
+        retrieve product object from database
+        '''
+
+        try:
+            return Product_details.objects.get(pk=pk)
+        except Product_details.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        '''
+        get a single product object with its details
+        '''
+
+        product=self.get_object(pk)
+        serializers=ProductSerializer(product)
+        return Response(serializers.data) 
+
 
 
 @permission_classes((permissions.AllowAny,))
