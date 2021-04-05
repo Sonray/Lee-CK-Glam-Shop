@@ -18,6 +18,7 @@ class Display_all_products(APIView):
         serializers = ProductSerializer(all_post, many=True)
         return Response(serializers.data)
         
+        
 
 @permission_classes((permissions.AllowAny,))
 class Display_specific_product(APIView):
@@ -44,8 +45,24 @@ class Display_specific_product(APIView):
 
 
 @permission_classes((permissions.AllowAny,))
-class Make_a_review(APIView):
-    pass
+class Make_a_review(APIView):    
+
+    serializer_class = ReviewSerializer
+
+    def post(self, request, format=None):
+        
+        review = request.data
+        serializers = self.serializer_class(data=review)
+
+        if serializers.is_valid(raise_exception=True):
+
+            serializers.save()
+
+            return Response(
+                serializers.data, status=status.HTTP_201_CREATED
+                )
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @permission_classes((permissions.AllowAny,))

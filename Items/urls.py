@@ -7,8 +7,9 @@ from .views import Display_all_products, Display_specific_product,Display_all_Re
 
 urlpatterns = [
 
-    path('display-products', Display_all_products.as_view(), name='display-products'),
-    path('product/<int:pk>', Display_specific_product.as_view()),
+    path('display-products', Display_all_products.as_view(), name='display-products' ),
+    path('product/<int:pk>', Display_specific_product.as_view(), name='products' ),
+    path('review', Make_a_review.as_view(), name='review' ),
     
 
 ]
