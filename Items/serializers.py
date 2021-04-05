@@ -19,12 +19,12 @@ class ReviewSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         depth = 1
         
-    # def validate(self, attrs):
-    #     user_id = attrs.get('user_id', '')
-    #     if Account.objects.filter(id=attrs['user_id']).exists():
-    #         raise serializers.ValidationError({'user_id',('Please register as a user to leave a review')})
+    def validate(self, attrs):
+        user_id = attrs.get('user_id', '')
+        if Account.objects.filter(id=attrs['user_id']).exists():
+            raise serializers.ValidationError({'user_id',('Please register as a user to leave a review')})
         
-    #     return super().validate(attrs)
+        return super().validate(attrs)
     def validate(self, data):
         return data
         

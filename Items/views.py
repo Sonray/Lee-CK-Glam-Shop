@@ -67,5 +67,9 @@ class Make_a_review(APIView):
 
 @permission_classes((permissions.AllowAny,))
 class Display_all_Reviews(APIView):
-    pass
+        
+    def get(self, request, format=None):
+        all_post = Reviews.objects.all()
+        serializers = ReviewSerializer(all_post, many=True)
+        return Response(serializers.data)
 
