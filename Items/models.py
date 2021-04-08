@@ -71,7 +71,7 @@ class Reviews(models.Model):
     class  Meta:
         verbose_name_plural = 'Reviews'
     
-    product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Product_review")
+    product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , null=True, related_name="Product_review")
     user_id             = models.ForeignKey( Account, on_delete=models.SET_NULL, blank= True , null=True , related_name="Product_review_user")
     date_reviewed       = models.DateTimeField( auto_now_add = True, null =True)
     Product_review      = models.TextField( blank=False)

@@ -65,7 +65,7 @@ class Make_a_review(APIView):
 
 
 
-@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,)) 
 class Display_all_Reviews(APIView):
         
     def get(self, request, format=None):
