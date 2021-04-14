@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Product_details, Reviews
 from django.utils import timezone
 from  Authentication.models import  Account
+from django.views.generic import CreateView
+from rest_framework.response import Response
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -10,28 +12,31 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product_details
         exclude = ('admin_id',)
         depth = 1
-        
-        
+                
         
 class ReviewSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Reviews
-        fields = '__all__'
+        fields = "__all__"
         depth = 1
         
-    # def validate(self, attrs):
-    #     user_id = attrs.get('user_id', '')
-    #     if Account.objects.filter(id=attrs['user_id']).exists():
-    #         raise serializers.ValidationError({'user_id',('Please register as a user to leave a review')})
-        
-    #     return super().validate(attrs)
     
     def validate(self, data):
         return data
+    
+    def create(self,request,*args,**kwargs):
         
-    # def create(self, validated_data):
-    #     review = Reviews.objects.create_user(**validated_data)
-    #     return review
+        data = request.data
+        
+        new_review = Reviews.objects.create( product = Product_details.objects.get(id=data["product"]),
+                                            user_id = Account.objects.get(id=data["user_id"]), 
+                                            Product_review=data["Product_review"], product_rating=data["product_rating"] )
+        
+        new_review.save()
+        serializer = ReviewSerializer(new_review)
+        return Response (serializer.data)
 
     def __str__(self):
         return Reviews
+    

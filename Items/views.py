@@ -56,7 +56,7 @@ class Make_a_review(APIView):
 
         if serializers.is_valid(raise_exception=True):
 
-            serializers.save()
+            serializers.create(request)
 
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
