@@ -68,8 +68,27 @@ class Make_a_review(APIView):
 @permission_classes((permissions.AllowAny,)) 
 class Display_all_Reviews(APIView):
         
-    def get(self, request, format=None):
-        all_post = Reviews.objects.all()
-        serializers = ReviewSerializer(all_post, many=True)
-        return Response(serializers.data)
+    # def get(self, request, format=None):
+    #     all_post = Reviews.objects.all()
+    #     serializers = ReviewSerializer(all_post, many=True)
+    #     return Response(serializers.data)
+
+    def get_object(self,pk):
+        '''
+        retrieve product object from database
+        '''
+
+        try:
+            return Reviews.objects.filter(product=pk)
+        except Reviews.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        '''
+        get a single product object with its details
+        '''
+
+        review=self.get_object(pk)
+        serializers=ReviewSerializer(review, many=True)
+        return Response(serializers.data) 
 

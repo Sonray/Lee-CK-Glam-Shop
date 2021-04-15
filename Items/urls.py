@@ -10,7 +10,7 @@ urlpatterns = [
     path('display-products', Display_all_products.as_view(), name='display-products' ),
     path('product/<int:pk>', Display_specific_product.as_view(), name='products' ),
     path('review', Make_a_review.as_view(), name='review' ),
-    path('display-reviews', Display_all_Reviews.as_view(), name='display-review' ),
+    path('display-reviews/<int:pk>', Display_all_Reviews.as_view(), name='display-review' ),
     
 
 ]

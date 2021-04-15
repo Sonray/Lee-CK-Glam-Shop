@@ -18,7 +18,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Reviews
-        fields = "__all__"
+        exclude = ('user_id',)
         depth = 1
         
     
