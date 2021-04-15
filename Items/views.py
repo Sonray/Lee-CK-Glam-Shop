@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from .models import Reviews, Product_details
 from .serializers import ProductSerializer, ReviewSerializer
 from rest_framework.decorators import permission_classes
-from rest_framework import permissions, generics, status
+from rest_framework import permissions, generics, status, filters
+
 
 # Create your views here.
 
@@ -67,11 +68,6 @@ class Make_a_review(APIView):
 
 @permission_classes((permissions.AllowAny,)) 
 class Display_all_Reviews(APIView):
-        
-    # def get(self, request, format=None):
-    #     all_post = Reviews.objects.all()
-    #     serializers = ReviewSerializer(all_post, many=True)
-    #     return Response(serializers.data)
 
     def get_object(self,pk):
         '''
@@ -92,3 +88,9 @@ class Display_all_Reviews(APIView):
         serializers=ReviewSerializer(review, many=True)
         return Response(serializers.data) 
 
+@permission_classes((permissions.AllowAny,)) 
+class Search_products_category(generics.ListAPIView):
+    queryset = Product_details.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['category__category']

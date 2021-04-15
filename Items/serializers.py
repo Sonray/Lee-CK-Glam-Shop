@@ -18,7 +18,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Reviews
-        exclude = ('user_id',)
+        # exclude = ('user_id',)
+        fields = "__all__"
         depth = 1
         
     
@@ -31,7 +32,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         
         new_review = Reviews.objects.create( product = Product_details.objects.get(id=data["product"]),
                                             user_id = Account.objects.get(id=data["user_id"]), 
-                                            Product_review=data["Product_review"], product_rating=data["product_rating"] )
+                                            Product_review=data["Product_review"], 
+                                            product_rating=data["product_rating"] )
         
         new_review.save()
         serializer = ReviewSerializer(new_review)
