@@ -88,9 +88,28 @@ class Display_all_Reviews(APIView):
         serializers=ReviewSerializer(review, many=True)
         return Response(serializers.data) 
 
+
 @permission_classes((permissions.AllowAny,)) 
 class Search_products_category(generics.ListAPIView):
     queryset = Product_details.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['category__category']
+    
+    
+@permission_classes((permissions.AllowAny,)) 
+class Search_products_subcategory(generics.ListAPIView):
+    queryset = Product_details.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['sub_category__sub_category']
+    
+    
+@permission_classes((permissions.AllowAny,)) 
+class Search_products(generics.ListAPIView):
+    queryset = Product_details.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [ '^sub_category__sub_category', '^sub_category__sub_category',
+                     '^product_description', '^product_name', 'new_price',
+                     '^specifications__product_specification', '^key_features__product_feature' ]
