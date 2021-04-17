@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'cloudinary',
     'django_filters',
 ]
@@ -157,8 +158,9 @@ STATICFILES_DIRS = (
 )
 
 # configuring the location for media
-MEDIA_URL = '/media/'
+MEDIA_URL = '/LeeCK/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 REST_FRAMEWORK = {
@@ -191,11 +193,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER =  config ('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config ('EMAIL_PASSWORD')
 
-
-cloudinary.config( 
-  cloud_name = "davidokwacha", 
-  api_key = "249499456836479", 
-  api_secret = "QUX6EW-EcG0IjqevYKE4jpfGEew" 
-)
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = { 
+  'CLOUD_NAME' : 'davidokwacha', 
+  'API_KEY' : '249499456836479', 
+  'API_SECRET' : 'QUX6EW-EcG0IjqevYKE4jpfGEew',
+}

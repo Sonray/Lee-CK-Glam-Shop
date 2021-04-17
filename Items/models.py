@@ -2,60 +2,28 @@ from django.db import models
 from  Authentication.models import  Account
 from cloudinary.models import CloudinaryField
 from django.utils import timezone
+from django.conf import settings
 
 # Create your models here.
-
-class Key_features(models.Model):
-    
-    class  Meta:
-        verbose_name_plural = 'Key_features'
-    
-    product_feature     = models.TextField()
-    
-    def __str__(self):
-        return self.product_feature
-    
-    
-class  Product_specifications(models.Model):
-    
-    class  Meta:
-        verbose_name_plural = 'Product_specifications'
-    
-    product_specification   = models.TextField()
-    
-    def __str__(self):
-        return self.product_specification
-
-
-class Whats_packaged(models.Model):
-    
-    class  Meta:
-        verbose_name_plural = 'Whats_packaged_in_the_box'
-    
-    in_the_box          = models.TextField()
-    
-    def __str__(self):
-        return self.in_the_box
-
 
 class  Product_details(models.Model):
     
     class  Meta:
         verbose_name_plural = 'Products'
     
-    product_image       = CloudinaryField('LeeGlam/', blank=False)
+    product_image       = models.ImageField(upload_to='products/', blank=False)
     product_name        = models.CharField( blank=False, max_length=120)
     category            = models.ManyToManyField('Category', blank=False )
     sub_category        = models.ManyToManyField('Sub_category', blank=False )
-    admin_id            = models.ForeignKey( Account, on_delete=models.SET_NULL, blank= True , null=True , related_name="product_upload_admin")
+    admin_id            = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="product_upload_admin")
     date_uploaded       = models.DateTimeField( auto_now_add = True, null =True)
     
     old_price           = models.IntegerField()
     new_price           = models.IntegerField()
     product_description = models.TextField()
-    key_features        = models.ManyToManyField(Key_features, blank=True)
-    in_the_box          = models.ManyToManyField(Whats_packaged, blank=True)
-    specifications      = models.ManyToManyField(Product_specifications, blank=True)
+    key_features        = models.TextField()
+    in_the_box          = models.TextField()
+    specifications      = models.TextField()
     
     def __str__(self):
         return self.product_name
@@ -73,7 +41,7 @@ class Reviews(models.Model):
         verbose_name_plural = 'Reviews'
     
     product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Product_review" , null=True, blank= True)
-    user_id             = models.ForeignKey( Account, on_delete=models.SET_NULL, blank= True , null=True , related_name="Product_review_user")
+    user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="Product_review_user")
     date_reviewed       = models.DateTimeField( auto_now_add = True, null =True)
     Product_review      = models.TextField( blank=False)
     product_rating      = models.IntegerField( blank=False)
@@ -107,3 +75,13 @@ class Sub_category(models.Model):
         return self.sub_category
 
 
+class Order(models.Model):
+    
+    class  Meta:
+        verbose_name_plural = 'Orders'
+    
+    user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
+    product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Product_order" , null=True, blank= True)
+    
+    def __str__(self):
+        return self.sub_category
