@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import url
-from django.urls import include
+from django.urls import include, path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'',include('Items.urls')),
     url(r'api/token/', TokenObtainPairView.as_view()),
     url(r'api/token/refresh/', TokenRefreshView.as_view()),
+    path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
 ]
