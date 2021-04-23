@@ -82,6 +82,22 @@ class Order(models.Model):
     
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
     product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Product_order" , null=True, blank= True)
+    first_name          = models.CharField(max_length=40)
+    last_name           = models.CharField(max_length=40)
+    phone_number        = models.IntegerField(max_length=20)
+    phone_number_2      = models.IntegerField(max_length=40)
+    delivery_address    = models.CharField(max_length=40)
+    region              = models.CharField(max_length=40)
+    city                = models.CharField(max_length=40)
+    delivery_method     = models.CharField(max_length=40)
+    price               = models.IntegerField(max_length=40)
+    date_of_order       = models.DateTimeField(auto_now_add=True)
+    billing_status      = models.BooleanField(default=False)
+    order_received      = models.BooleanField(default=False)
+    
+    
     
     def __str__(self):
         return self.sub_category
+    
+    
