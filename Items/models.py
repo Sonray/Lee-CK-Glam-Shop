@@ -93,11 +93,21 @@ class Order(models.Model):
     price               = models.IntegerField(max_length=40)
     date_of_order       = models.DateTimeField(auto_now_add=True)
     billing_status      = models.BooleanField(default=False)
-    order_received      = models.BooleanField(default=False)
+    order_pending       = models.BooleanField(default=False)
+        
+        
+    def __str__(self):
+        return self.Order
     
+
+
+class Pending_Order(models.Model):
     
+    class  Meta:
+        verbose_name_plural = 'Pending_Orders'
+    
+    order_id            = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Order" , null=True, blank= False)
+    order_dispatched    = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.sub_category
-    
-    
+        return self.Pending_Order    
