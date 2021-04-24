@@ -106,8 +106,22 @@ class Pending_Order(models.Model):
     class  Meta:
         verbose_name_plural = 'Pending_Orders'
     
-    order_id            = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Order" , null=True, blank= False)
-    order_dispatched    = models.BooleanField(default=False)
+    order_id                    = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Order" , null=True, blank= False)
+    order_dispatched            = models.BooleanField(default=False)
+    order_received_by_customer  = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.Pending_Order    
+        return self.order_id    
+
+
+class Order_Received_by_Customer(models.Model):
+    
+    class  Meta:
+        verbose_name_plural = 'Orders_Received'
+    
+    order_id            = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Order" , null=True, blank= False)
+    
+        
+    def __str__(self):
+        return self.order_id    
+
