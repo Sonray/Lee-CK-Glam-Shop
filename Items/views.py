@@ -7,7 +7,7 @@ from .serializers import ProductSerializer, ReviewSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
-
+import requests
 
 # Create your views here.
 
@@ -114,3 +114,29 @@ class Search_products(generics.ListAPIView):
     search_fields = [ '^sub_category__sub_category', '^sub_category__sub_category',
                      '^product_description', '^product_name', 'new_price',
                      '^specifications__product_specification', '^key_features__product_feature' ]
+    
+
+class  Mpesa_payment(generics.APIView):
+    
+    
+    access_token = "Access-Token"
+    api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    headers = { "Authorization": "Bearer %s" % access_token }
+    request = {
+        "BusinessShortCode": " ",
+        "Password": " ",
+        "Timestamp": " ",
+        "TransactionType": "CustomerPayBillOnline",
+        "Amount": " ",
+        "PartyA": " ",
+        "PartyB": " ",
+        "PhoneNumber": " ",
+        "CallBackURL": "https://ip_address:port/callback",
+        "AccountReference": " ",
+        "TransactionDesc": " "
+    }
+    
+    response = requests.post(api_url, json = request, headers=headers)
+    
+    print (response.text)
+    
