@@ -118,25 +118,42 @@ class Search_products(generics.ListAPIView):
 
 class  Mpesa_payment(generics.APIView):
     
+    serializer_class = ReviewSerializer
+
+    def post(self, request, format=None):
+        
+        review = request.data
+        serializers = self.serializer_class(data=review)
+
+        if serializers.is_valid(raise_exception=True):
+
+            serializers.create(request)
+            
+            access_token = "Access-Token"
+            api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+            headers = { "Authorization": "Bearer %s" % access_token }
+            request = {
+                "BusinessShortCode": " ",
+                "Password": " ",
+                "Timestamp": " ",
+                "TransactionType": "CustomerPayBillOnline",
+                "Amount": " ",
+                "PartyA": " ",
+                "PartyB": " ",
+                "PhoneNumber": " ",
+                "CallBackURL": "https://ip_address:port/callback",
+                "AccountReference": " ",
+                "TransactionDesc": " "
+            }
+            
+            response = requests.post(api_url, json = request, headers=headers)
+            
+            print (response.text)
+
+            return Response(
+                serializers.data, status=status.HTTP_201_CREATED
+                )
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    access_token = "Access-Token"
-    api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-    headers = { "Authorization": "Bearer %s" % access_token }
-    request = {
-        "BusinessShortCode": " ",
-        "Password": " ",
-        "Timestamp": " ",
-        "TransactionType": "CustomerPayBillOnline",
-        "Amount": " ",
-        "PartyA": " ",
-        "PartyB": " ",
-        "PhoneNumber": " ",
-        "CallBackURL": "https://ip_address:port/callback",
-        "AccountReference": " ",
-        "TransactionDesc": " "
-    }
     
-    response = requests.post(api_url, json = request, headers=headers)
-    
-    print (response.text)
     

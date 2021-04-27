@@ -79,25 +79,29 @@ class Order(models.Model):
     
     class  Meta:
         verbose_name_plural = 'Orders'
+        ordering = ('-created',)
     
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
     product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Product_order" , null=True, blank= True)
     first_name          = models.CharField(max_length=40)
     last_name           = models.CharField(max_length=40)
     phone_number        = models.IntegerField(max_length=20)
-    phone_number_2      = models.IntegerField(max_length=40)
+    order_phone_number  = models.IntegerField(max_length=20)
     delivery_address    = models.CharField(max_length=40)
     region              = models.CharField(max_length=40)
     city                = models.CharField(max_length=40)
     delivery_method     = models.CharField(max_length=40)
     price               = models.IntegerField(max_length=40)
     date_of_order       = models.DateTimeField(auto_now_add=True)
+    CheckoutRequestID   = models.CharField(max_length=50, blank=True, null=True)
+    MerchantRequestID   = models.CharField(max_length=50, blank=True, null=True)
     billing_status      = models.BooleanField(default=False)
     order_pending       = models.BooleanField(default=False)
+    Order_items         = models.ManyToManyField('Product_details', blank=False )
         
         
     def __str__(self):
-        return self.Order
+        return self.id
     
 
 
@@ -123,5 +127,22 @@ class Order_Received_by_Customer(models.Model):
     
         
     def __str__(self):
-        return self.order_id    
+        return self.order_id  
 
+
+class Order_Made_by_Mpesa(models.Model):
+    
+    class  Meta:
+        verbose_name_plural = 'Orders_Received'
+    
+    CheckoutRequestID       = models.CharField(max_length=50, blank=True, null=True)
+    MerchantRequestID       = models.CharField(max_length=50, blank=True, null=True)
+    ResultCode              = models.IntegerField(blank=True, null=True)
+    ResultDesc              = models.CharField(max_length=120, blank=True, null=True)
+    Amount                  = models.FloatField(default=0)
+    MpesaReceiptNumber      = models.CharField(max_length=120, blank=True, null=True)
+    TransactionDate         = models.DateField( blank=True, null=True)
+    PhoneNumber             = models.CharField(max_length=120, blank=True, null=True)
+        
+    def __str__(self):
+        return self.CheckoutRequestID
