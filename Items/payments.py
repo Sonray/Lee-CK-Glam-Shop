@@ -33,7 +33,7 @@ def  Lipa_na_mpesa(self, phone_number, amount):
         "PartyA": phone_number,
         "PartyB": config ('Lipa_Na_Mpesa_Shortcode'),
         "PhoneNumber": phone_number,
-        "CallBackURL": "https://ip_address:port/callback",
+        "CallBackURL": "https://ip_address:port/lipa_na_saf",
         "AccountReference": config ('paybillNO'),
         "TransactionDesc": "Make payment to LeeGlam"
     }
@@ -41,6 +41,7 @@ def  Lipa_na_mpesa(self, phone_number, amount):
     response = requests.post(api_url, json = request, headers=headers)
     
     mpesa_infomation = response.json()
+    
     MerchantRequestID = mpesa_infomation['MerchantRequestID']
     print (MerchantRequestID)
     
