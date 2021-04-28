@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Reviews, Product_details
-from .serializers import ProductSerializer, ReviewSerializer
+from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
@@ -128,6 +128,26 @@ class  Mpesa_payment(APIView):
         if serializers.is_valid(raise_exception=True):
 
             serializers.create(request)
+            
+            return Response(
+                serializers.data, status=status.HTTP_201_CREATED
+                )
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+
+class  Order_Product(APIView):
+    
+    serializer_class = OrderSerializer
+
+    def post(self, request, format=None):
+        
+        review = request.data
+        serializers = self.serializer_class(data=review)
+
+        if serializers.is_valid(raise_exception=True):
+
+            serializers.save()
             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED

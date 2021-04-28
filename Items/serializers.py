@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product_details, Reviews, Order_Made_by_Mpesa
+from .models import Product_details, Reviews, Order_Made_by_Mpesa, Order
 from django.utils import timezone
 from  Authentication.models import  Account
 from django.views.generic import CreateView
@@ -10,6 +10,13 @@ class ProductSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Product_details
+        exclude = ('admin_id',)
+        depth = 1
+                
+class OrderSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = Order
         exclude = ('admin_id',)
         depth = 1
                 
