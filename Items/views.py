@@ -116,7 +116,7 @@ class Search_products(generics.ListAPIView):
                      '^specifications__product_specification', '^key_features__product_feature' ]
     
 
-class  Mpesa_payment(generics.APIView):
+class  Mpesa_payment(APIView):
     
     serializer_class = ReviewSerializer
 
