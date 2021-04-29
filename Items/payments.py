@@ -20,7 +20,7 @@ r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
 json_response = r.json()
 access_token1 = json_response['access_token']
   
-def  Lipa_na_mpesa(self, phone_number, amount):
+def  Lipa_na_mpesa(phone_number, amount):
     access_token = access_token1
     api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     headers = { "Authorization": "Bearer %s" % access_token }
@@ -33,19 +33,21 @@ def  Lipa_na_mpesa(self, phone_number, amount):
         "PartyA": phone_number,
         "PartyB": config ('Lipa_Na_Mpesa_Shortcode'),
         "PhoneNumber": phone_number,
-        "CallBackURL": "https://ip_address:port/lipa_na_saf",
+        "CallBackURL": "https://fullstackdjango.com/lipa_na_saf",
         "AccountReference": config ('paybillNO'),
         "TransactionDesc": "Make payment to LeeGlam"
     }
     
     response = requests.post(api_url, json = request, headers=headers)
     
-    mpesa_infomation = response.json()
+    print (response.text)
+    # mpesa_infomation = response.json()
     
-    MerchantRequestID = mpesa_infomation['MerchantRequestID']
-    print (MerchantRequestID)
+    # MerchantRequestID = mpesa_infomation['MerchantRequestID']
+    # print (MerchantRequestID)
     
-    CheckoutRequestID = mpesa_infomation['CheckoutRequestID']
-    print (CheckoutRequestID)
+    # CheckoutRequestID = mpesa_infomation['CheckoutRequestID']
+    # print (CheckoutRequestID)
     
-    return (MerchantRequestID,CheckoutRequestID)
+    # return (MerchantRequestID,CheckoutRequestID)
+    

@@ -17,8 +17,7 @@ class OrderSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = Order
-        exclude = ('admin_id',)
-        depth = 1
+        fields = '__all__'
                 
         
 class ReviewSerializer(serializers.ModelSerializer):
@@ -53,7 +52,6 @@ class MpesaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order_Made_by_Mpesa
         fields = "__all__"
-        depth = 1
         
     
     def validate(self, data):

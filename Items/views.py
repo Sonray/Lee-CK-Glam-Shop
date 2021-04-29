@@ -8,6 +8,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 import requests
+from .payments import Lipa_na_mpesa
 
 # Create your views here.
 
@@ -116,6 +117,7 @@ class Search_products(generics.ListAPIView):
                      '^specifications__product_specification', '^key_features__product_feature' ]
     
 
+@permission_classes((permissions.AllowAny,)) 
 class  Mpesa_payment(APIView):
     
     serializer_class = ReviewSerializer
@@ -127,7 +129,7 @@ class  Mpesa_payment(APIView):
 
         if serializers.is_valid(raise_exception=True):
 
-            serializers.create(request)
+            serializers.save()
             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
@@ -136,6 +138,7 @@ class  Mpesa_payment(APIView):
     
     
 
+@permission_classes((permissions.AllowAny,)) 
 class  Order_Product(APIView):
     
     serializer_class = OrderSerializer
@@ -146,7 +149,9 @@ class  Order_Product(APIView):
         serializers = self.serializer_class(data=review)
 
         if serializers.is_valid(raise_exception=True):
-
+            phone_number = str( review['order_phone_number'])
+            amount_1 = str(review['price'])
+            Lipa_na_mpesa( phone_number, amount_1)
             serializers.save()
             
             return Response(
