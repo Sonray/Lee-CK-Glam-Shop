@@ -40,7 +40,7 @@ def  Lipa_na_mpesa(phone_number, amount):
     
     response = requests.post(api_url, json = request, headers=headers)
     
-    print (response.text)
+    # print (response.text)
     # mpesa_infomation = response.json()
     
     # MerchantRequestID = mpesa_infomation['MerchantRequestID']
@@ -49,5 +49,5 @@ def  Lipa_na_mpesa(phone_number, amount):
     # CheckoutRequestID = mpesa_infomation['CheckoutRequestID']
     # print (CheckoutRequestID)
     
-    # return (MerchantRequestID,CheckoutRequestID)
+    return (response.json())
     

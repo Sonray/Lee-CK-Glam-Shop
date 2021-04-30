@@ -149,10 +149,16 @@ class  Order_Product(APIView):
         serializers = self.serializer_class(data=review)
 
         if serializers.is_valid(raise_exception=True):
+            
             phone_number = str( review['order_phone_number'])
             amount_1 = str(review['price'])
-            Lipa_na_mpesa( phone_number, amount_1)
-            serializers.save()
+            
+            mpesa_dict = Lipa_na_mpesa( phone_number, amount_1)
+            
+            MerchantRequestID = mpesa_dict['MerchantRequestID']
+            CheckoutRequestID = mpesa_dict['CheckoutRequestID']
+            
+            serializers.create(request, MerchantRequestID, CheckoutRequestID)
             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED

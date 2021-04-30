@@ -18,6 +18,19 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+    
+    def create(self,request, MerchantRequestID, CheckoutRequestID,*args,**kwargs):
+        
+        data = request.data
+        
+        new_review = Order.objects.create( user_id = Account.objects.get(id=data["user_id"]), product = Product_details.objects.get(id=data["product"]) , first_name = data["first_name"], last_name = data["last_name"], phone_number = data["phone_number"],
+                                            order_phone_number =data["order_phone_number"], delivery_address = data["delivery_address"], region = data["region"], city = data["city"], delivery_method = data["delivery_method"],
+                                            price =data["price"], CheckoutRequestID = data["CheckoutRequestID"], MerchantRequestID = data["MerchantRequestID"], Product_details.Order_items.set(data["Order_items"])
+                                            )
+        
+        new_review.save()
+        serializer = ReviewSerializer(new_review)
+        return Response (serializer.data)
                 
         
 class ReviewSerializer(serializers.ModelSerializer):
