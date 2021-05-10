@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Reviews, Product_details
+from .models import Reviews, Product_details,Order, Order_Made_by_Mpesa
 from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
@@ -158,8 +158,14 @@ class  Order_Product(APIView):
             MerchantRequestID = mpesa_dict['MerchantRequestID']
             CheckoutRequestID = mpesa_dict['CheckoutRequestID']
             
-            serializers.create(request, MerchantRequestID, CheckoutRequestID)
+            Order_item = Product_details.objects.filter(pk=review['Order_items']) 
             
+            # instance = Order.objects.create(organization=org)            
+            instance = serializers.create(request, MerchantRequestID, CheckoutRequestID)
+            
+            instance.Order_items.set(Order_item)
+            instance.save()
+             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
                 )

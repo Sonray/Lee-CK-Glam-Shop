@@ -93,11 +93,11 @@ class Order(models.Model):
     MerchantRequestID   = models.CharField(max_length=50, blank=True, null=True)
     billing_status      = models.BooleanField(default=False, blank=True, null=True)
     order_pending       = models.BooleanField(default=False, blank=True, null=True)
-    Order_items         = models.ManyToManyField('Product_details', blank=False )
+    Order_items         = models.ManyToManyField('Product_details', blank=False, related_name="Order_items" )
         
         
     def __str__(self):
-        return self.id
+        return self.delivery_method
     
     
     class  Meta:
@@ -116,7 +116,7 @@ class Pending_Order(models.Model):
     order_received_by_customer  = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.order_id    
+        return self.Pending_Orders    
 
 
 class Order_Received_by_Customer(models.Model):
@@ -128,7 +128,7 @@ class Order_Received_by_Customer(models.Model):
     
         
     def __str__(self):
-        return self.order_id  
+        return self.Order_Received_by_Customer  
 
 
 class Order_Made_by_Mpesa(models.Model):
@@ -146,4 +146,4 @@ class Order_Made_by_Mpesa(models.Model):
     PhoneNumber             = models.CharField(max_length=120, blank=True, null=True)
         
     def __str__(self):
-        return self.CheckoutRequestID
+        return self.Order_Made_by_Mpesa
