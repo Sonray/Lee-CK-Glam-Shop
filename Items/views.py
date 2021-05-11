@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Reviews, Product_details,Order, Order_Made_by_Mpesa
+from Authentication.models import  Account
 from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
@@ -146,6 +147,7 @@ class  Order_Product(APIView):
     def post(self, request, format=None):
         
         review = request.data
+        data = request.data
         serializers = self.serializer_class(data=review)
 
         if serializers.is_valid(raise_exception=True):
@@ -155,17 +157,28 @@ class  Order_Product(APIView):
             
             mpesa_dict = Lipa_na_mpesa( phone_number, amount_1)
             
-            MerchantRequestID = mpesa_dict['MerchantRequestID']
-            CheckoutRequestID = mpesa_dict['CheckoutRequestID']
+            MerchantRequestID1 = mpesa_dict['MerchantRequestID']
+            CheckoutRequestID1 = mpesa_dict['CheckoutRequestID']
             
-            Order_item = Product_details.objects.filter(pk=review['Order_items']) 
+            Order_item = Product_details.objects.get(pk=review['Order_items']) 
+                      
+            # instance = serializers.create(request, MerchantRequestID, CheckoutRequestID)
             
-            # instance = Order.objects.create(organization=org)            
-            instance = serializers.create(request, MerchantRequestID, CheckoutRequestID)
+            # instance.product_details.add(Order_item)
+            # instance.save()
             
-            instance.Order_items.set(Order_item)
-            instance.save()
-             
+            or1 = Order( user_id = Account.objects.get(id=data["user_id"]), product = Product_details.objects.get(id=data["product"]), 
+                   first_name = data["first_name"], last_name = data["last_name"],
+                   phone_number = data["phone_number"],order_phone_number =data["order_phone_number"], 
+                   delivery_address = data["delivery_address"], region = data["region"], 
+                   city = data["city"], delivery_method = data["delivery_method"],
+                   price =data["price"], CheckoutRequestID = CheckoutRequestID1, 
+                   MerchantRequestID = MerchantRequestID1, 
+                   )
+            or1.save()
+            
+            or1.Order_items.add(Order_item)
+            
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
                 )
