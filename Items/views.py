@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Reviews, Product_details,Order, Order_Made_by_Mpesa
 from Authentication.models import  Account
-from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer
+from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer, MpesaSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
@@ -121,7 +121,7 @@ class Search_products(generics.ListAPIView):
 @permission_classes((permissions.AllowAny,)) 
 class  Mpesa_payment(APIView):
     
-    serializer_class = ReviewSerializer
+    serializer_class = MpesaSerializer
 
     def post(self, request, format=None):
         
@@ -131,6 +131,12 @@ class  Mpesa_payment(APIView):
         if serializers.is_valid(raise_exception=True):
 
             serializers.save()
+            
+            CheckoutRequestID = review['CheckoutRequestID']
+            CheckoutRequestIDdb = Order_Made_by_Mpesa.objects.filter(CheckoutRequestID = CheckoutRequestID, ResponseCode=0)
+            
+            if CheckoutRequestIDdb == True:
+                pass
             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
