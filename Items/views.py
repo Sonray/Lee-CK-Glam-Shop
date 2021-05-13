@@ -133,10 +133,12 @@ class  Mpesa_payment(APIView):
             serializers.save()
             
             CheckoutRequestID = review['CheckoutRequestID']
-            CheckoutRequestIDdb = Order_Made_by_Mpesa.objects.filter(CheckoutRequestID = CheckoutRequestID, ResponseCode=0)
+            MerchantRequestID = review['MerchantRequestID']
+            CheckoutRequestID_db = Order_Made_by_Mpesa.objects.filter(CheckoutRequestID = CheckoutRequestID, ResponseCode=0)
+            Order_value = Order.objects.filter(MerchantRequestID=MerchantRequestID).values('CheckoutRequestID')
             
-            if CheckoutRequestIDdb == True:
-                pass
+            if CheckoutRequestID_db == True:
+                Order.objects.filter(CheckoutRequestID=CheckoutRequestID).update(payment_status=True)
             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED

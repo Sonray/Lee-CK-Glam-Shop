@@ -91,7 +91,7 @@ class Order(models.Model):
     date_of_order       = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     CheckoutRequestID   = models.CharField(max_length=50, blank=True, null=True)
     MerchantRequestID   = models.CharField(max_length=50, blank=True, null=True)
-    billing_status      = models.BooleanField(default=False, blank=True, null=True)
+    payment_status      = models.BooleanField(default=False, blank=True, null=True)
     order_pending       = models.BooleanField(default=False, blank=True, null=True)
     Order_items         = models.ManyToManyField('Product_details', blank=False, related_name="Order_items" )
         
@@ -152,10 +152,11 @@ class Order_Made_by_Mpesa(models.Model):
 class Paid_Order(models.Model):
     
     class  Meta:
-        verbose_name_plural = 'Pending_Orders'
+        verbose_name_plural = 'Paid_Order'
     
-    order_id                    = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Pending_Order" , null=True, blank= False)
+    order_id                    = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Paid_Order" , null=True, blank= False)
+    CheckoutRequestID           = models.CharField(max_length=50, blank=True, null=True)
     order_dispatched            = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.Pending_Orders  
+        return self.Paid_Order  
