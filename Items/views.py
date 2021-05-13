@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Reviews, Product_details,Order, Order_Made_by_Mpesa
+from .models import Reviews, Product_details,Order, Order_Made_by_Mpesa, Paid_Order
 from Authentication.models import  Account
 from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer, MpesaSerializer
 from rest_framework.decorators import permission_classes
@@ -135,10 +135,11 @@ class  Mpesa_payment(APIView):
             CheckoutRequestID = review['CheckoutRequestID']
             MerchantRequestID = review['MerchantRequestID']
             CheckoutRequestID_db = Order_Made_by_Mpesa.objects.filter(CheckoutRequestID = CheckoutRequestID, ResponseCode=0)
-            Order_value = Order.objects.filter(MerchantRequestID=MerchantRequestID).values('CheckoutRequestID')
+            Order_id = Order.objects.filter(MerchantRequestID=MerchantRequestID).values('id')
             
             if CheckoutRequestID_db == True:
                 Order.objects.filter(CheckoutRequestID=CheckoutRequestID).update(payment_status=True)
+                Paid_Order.objects.create(order_id=Order_id, CheckoutRequestID=CheckoutRequestID)
             
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
