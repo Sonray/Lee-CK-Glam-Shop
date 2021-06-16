@@ -73,19 +73,13 @@ class Sub_category(models.Model):
     
     def __str__(self):
         return self.sub_category
-
-
-class Delivery_Status(models.Model):
         
-    Delivery_Status        = models.CharField(max_length=40, blank=True, null=True)
-    
-    def __str__(self):
-        return self.id
-    
-    
-    class  Meta:
-        verbose_name_plural = 'Delivery_Status'
-        
+
+delivery_status = (
+    ('shipped', 'Shipped'),
+    ('delivered', 'Delivered'),
+    ('failed', 'Failed')
+)
 
 class Order(models.Model):
         
@@ -96,11 +90,11 @@ class Order(models.Model):
     Payment_method      = models.CharField(max_length=50, blank=True, null=True)
     delivery_method     = models.CharField(max_length=50, blank=True, null=True)
     payment_status      = models.BooleanField(default=False, blank=True, null=True)
-    order_status        = models.ForeignKey( Delivery_Status,on_delete = models.CASCADE , related_name="Order_Delivery_Status" , null=True, blank= True)
-        
+    order_status        = models.CharField(max_length=50, blank=True, null=True, choices=delivery_status)
+    
     
     def __str__(self):
-        return self.id
+        return self.delivery_method
     
     
     class  Meta:
@@ -117,7 +111,7 @@ class Ordered_Items(models.Model):
     price               = models.IntegerField(blank=True, null=True)
     
     def __str__(self):
-        return self.id
+        return self.order_id
     
     
     class  Meta:
@@ -140,7 +134,7 @@ class Pickup_stations(models.Model):
     City                = models.CharField(max_length=100,blank=True, null=True)
     
     def __str__(self):
-        return self.id
+        return self.County
     
     
     class  Meta:
@@ -162,7 +156,7 @@ class Customer_Pickup_point(models.Model):
     City                = models.CharField(max_length=100,blank=True, null=True)
     
     def __str__(self):
-        return self.id
+        return self.County
     
     
     class  Meta:
