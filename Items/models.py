@@ -75,6 +75,18 @@ class Sub_category(models.Model):
         return self.sub_category
 
 
+class Delivery_Status(models.Model):
+        
+    Delivery_Status        = models.CharField(max_length=40, blank=True, null=True)
+    
+    def __str__(self):
+        return self.id
+    
+    
+    class  Meta:
+        verbose_name_plural = 'Delivery_Status'
+        
+
 class Order(models.Model):
         
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
@@ -84,7 +96,7 @@ class Order(models.Model):
     Payment_method      = models.CharField(max_length=50, blank=True, null=True)
     delivery_method     = models.CharField(max_length=50, blank=True, null=True)
     payment_status      = models.BooleanField(default=False, blank=True, null=True)
-    order_status        = models.TextField(max_length=150, blank=True, null=True)
+    order_status        = models.ForeignKey( Delivery_Status,on_delete = models.CASCADE , related_name="Order_Delivery_Status" , null=True, blank= True)
         
     
     def __str__(self):
