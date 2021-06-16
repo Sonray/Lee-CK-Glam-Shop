@@ -33,6 +33,22 @@ class  Product_details(models.Model):
     def delete_product(self):
         self.delete()
     
+
+class Product_images(models.Model):
+    
+    class  Meta:
+        verbose_name_plural = 'Product_images'
+    
+    product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Product_image_id" , null=True, blank= True)
+    image               = models.ImageField(upload_to='products/', blank=False, null=True)
+    
+    def save_review(self):
+        self.save()
+
+    def delete_review(self):
+        self.delete()
+
+
     
 class Reviews(models.Model):
     
