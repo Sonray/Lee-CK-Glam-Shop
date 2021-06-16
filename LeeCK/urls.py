@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'api/token/', TokenObtainPairView.as_view()),
     url(r'api/token/refresh/', TokenRefreshView.as_view()),
     path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('tinymce/', include('tinymce.urls')),
 
 ]

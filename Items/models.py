@@ -3,6 +3,7 @@ from  Authentication.models import  Account
 from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from django.conf import settings
+from tinymce.models import HTMLField
 
 # Create your models here.
 
@@ -19,10 +20,10 @@ class  Product_details(models.Model):
     date_uploaded       = models.DateTimeField( auto_now_add = True, null =True)
     old_price           = models.IntegerField(blank=True, null=True)
     new_price           = models.IntegerField(blank=True, null=True)
-    product_description = models.TextField(blank=True, null=True)
-    key_features        = models.TextField(blank=True, null=True)
-    in_the_box          = models.TextField(blank=True, null=True)
-    specifications      = models.TextField(blank=True, null=True)
+    product_description = HTMLField(blank=True, null=True)
+    key_features        = HTMLField(blank=True, null=True)
+    in_the_box          = HTMLField(blank=True, null=True)
+    specifications      = HTMLField(blank=True, null=True)
     
     def __str__(self):
         return self.product_name

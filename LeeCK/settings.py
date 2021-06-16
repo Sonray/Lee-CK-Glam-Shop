@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'django_filters',
     'oauth2_provider',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
