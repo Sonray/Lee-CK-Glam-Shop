@@ -85,6 +85,7 @@ class Order(models.Model):
         
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
     date_ordered        = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    Ordered_Items       = models.ManyToManyField('Ordered_Items', blank=False )
     payment_id          = models.IntegerField(blank=True, null=True)
     amount_paid         = models.IntegerField(blank=True, null=True)
     Payment_method      = models.CharField(max_length=50, blank=True, null=True)

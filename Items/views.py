@@ -9,7 +9,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 import requests
-from .payments import Lipa_na_mpesa
+from .mpesa_payments import Lipa_na_mpesa
 import json
 
 # Create your views here.
@@ -69,7 +69,6 @@ class Make_a_review(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope )) 
 class Display_all_Reviews(APIView):
 
@@ -117,35 +116,6 @@ class Search_products(generics.ListAPIView):
     search_fields = [ '^sub_category__sub_category', '^sub_category__sub_category',
                      '^product_description', '^product_name', 'new_price',
                      '^specifications__product_specification', '^key_features__product_feature' ]
-    
-
-@permission_classes((permissions.AllowAny,)) 
-class  Mpesa_payment(APIView):
-    
-    serializer_class = MpesaSerializer
-
-    def post(self, request, format=None):
-        
-        review = request.data
-        serializers = self.serializer_class(data=review)
-
-        if serializers.is_valid(raise_exception=True):
-
-            serializers.save()
-            
-            CheckoutRequestID = review['CheckoutRequestID']
-            MerchantRequestID = review['MerchantRequestID']
-            # CheckoutRequestID_db = Order_Made_by_Mpesa.objects.filter(CheckoutRequestID = CheckoutRequestID, ResponseCode=0)
-            Order_id = Order.objects.filter(MerchantRequestID=MerchantRequestID).values('id')
-            
-            # if CheckoutRequestID_db == True:
-            #     Order.objects.filter(CheckoutRequestID=CheckoutRequestID).update(payment_status=True)
-            #     Paid_Order.objects.create(order_id=Order_id, CheckoutRequestID=CheckoutRequestID)
-            
-            return Response(
-                serializers.data, status=status.HTTP_201_CREATED
-                )
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 @permission_classes((permissions.AllowAny,)) 
