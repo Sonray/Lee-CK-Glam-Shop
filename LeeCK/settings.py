@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_filters',
     'oauth2_provider',
     'tinymce',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

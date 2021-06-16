@@ -4,6 +4,7 @@ from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from django.conf import settings
 from tinymce.models import HTMLField
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -144,7 +145,7 @@ class Pickup_stations(models.Model):
         
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="Pickup_stations_user_id")
     date                = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    phone_number        = models.IntegerField()
+    phone_number        = PhoneNumberField(blank=True, null=True)
     Address_Landmark    = models.CharField(max_length=150,blank=True, null=True)
     Address_information = models.CharField(max_length=150,blank=True, null=True)
     service_hours       = models.CharField(max_length=150,blank=True, null=True)
@@ -168,7 +169,7 @@ class Customer_Pickup_point(models.Model):
     Station_id          = models.ForeignKey( Pickup_stations,on_delete = models.CASCADE , related_name="Pickup_stations" , null=True, blank= False)
     first_name          = models.CharField(max_length=30,blank=True, null=True)
     last_name           = models.CharField(max_length=30,blank=True, null=True)
-    phone_number        = models.IntegerField(blank=True, null=True)
+    phone_number        = PhoneNumberField(blank=True, null=True)
     Delivery_address    = models.CharField(max_length=150,blank=True, null=True)
     County              = models.CharField(max_length=50,blank=True, null=True)
     City                = models.CharField(max_length=100,blank=True, null=True)
