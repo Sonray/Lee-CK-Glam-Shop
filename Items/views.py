@@ -1,8 +1,9 @@
+from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Reviews, Product_details,Order, Mpesa_Order_payments
+from .models import Reviews, Product_details,Order, Ordered_Items, Customer_Pickup_point
 from Authentication.models import  Account
 from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer, MpesaSerializer
 from rest_framework.decorators import permission_classes
@@ -24,7 +25,6 @@ class Display_all_products(APIView):
         return Response(serializers.data)
         
         
-
 @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope ))
 class Display_specific_product(APIView):
     
@@ -46,7 +46,6 @@ class Display_specific_product(APIView):
         product=self.get_object(pk)
         serializers=ProductSerializer(product)
         return Response(serializers.data) 
-
 
 
 @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope))
@@ -119,7 +118,7 @@ class Search_products(generics.ListAPIView):
     
 
 @permission_classes((permissions.AllowAny,)) 
-class  Order_Product(APIView):
+class  Order_Product_MPESA(APIView):
     
     serializer_class = OrderSerializer
 
@@ -136,23 +135,46 @@ class  Order_Product(APIView):
             
             mpesa_dict = Lipa_na_mpesa( phone_number, amount_1)
             
-            MerchantRequestID1 = mpesa_dict['MerchantRequestID']
-            CheckoutRequestID1 = mpesa_dict['CheckoutRequestID']
+            ResultCode      = mpesa_dict['ResultCode']
+            payment_id      = mpesa_dict['CallbackMetadata.Item[1].Value']
+            Ordered_Item    = mpesa_dict['Ordered_Items']
+            pickup_point    = data['Customer_Pickup_point']
             
-            Order_item = Product_details.objects.get(pk=review['Order_items']) 
-                        
-            or1 = Order( user_id = Account.objects.get(id=data["user_id"]), product = Product_details.objects.get(id=data["product"]), 
-                   first_name = data["first_name"], last_name = data["last_name"],
-                   phone_number = data["phone_number"],order_phone_number =data["order_phone_number"], 
-                   delivery_address = data["delivery_address"], region = data["region"], 
-                   city = data["city"], delivery_method = data["delivery_method"],
-                   price =data["price"], CheckoutRequestID = CheckoutRequestID1, 
-                   MerchantRequestID = MerchantRequestID1, 
-                   )
-            or1.save()
-            
-            or1.Order_items.add(Order_item)
-            
+            if ResultCode != 0:
+                
+                order = Order.objects.create(user_id=data['user_id'], payment_id = payment_id, amount_paid=data['amount_paid'],
+                                    Payment_method='M-Pesa',delivery_method=data['delivery_method'] )
+                
+                order_id = order.pk
+                
+                for item in Ordered_Item:
+                    
+                    Ordered_Items.objects.create(order_id = order_id, product = mpesa_dict['product'], quantity = mpesa_dict['quantity'], price = mpesa_dict['price'])
+                
+                for pickup in pickup_point:
+                    
+                    Customer_Pickup_point.objects.create(order_id = order_id, user_id=data['user_id'],Station_id = data['Station_id'],
+                                                        first_name=data['user_id'], last_name=data['last_name'], phone_number=data['phone_number'],
+                                                        Delivery_address=data['Delivery_address'], County=data['County'], City=data['City'] )
+                
+            else:
+                
+                order = Order.objects.create(user_id=data['user_id'], payment_id = payment_id, amount_paid=data['amount_paid'],
+                                    Payment_method='M-Pesa',delivery_method=data['delivery_method'], payment_status = True )
+                
+                order_id = order.pk
+                
+                for item in Ordered_Item:
+                    
+                    Ordered_Items.objects.create(order_id = order_id, product = mpesa_dict['product'], quantity = mpesa_dict['quantity'], price = mpesa_dict['price'])
+                
+                for pickup in pickup_point:
+                    
+                    Customer_Pickup_point.objects.create(order_id = order_id, user_id=data['user_id'],Station_id = data['Station_id'],
+                                                        first_name=data['user_id'], last_name=data['last_name'], phone_number=data['phone_number'],
+                                                        Delivery_address=data['Delivery_address'], County=data['County'], City=data['City'] )
+                 
+                
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED
                 )
