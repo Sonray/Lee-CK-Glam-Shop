@@ -137,7 +137,7 @@ class  Order_Product_MPESA(APIView):
             
             ResultCode      = mpesa_dict['ResultCode']
             payment_id      = mpesa_dict['CallbackMetadata.Item[1].Value']
-            Ordered_Item    = mpesa_dict['Ordered_Items']
+            Ordered_Item    = data['Ordered_Items']
             pickup_point    = data['Customer_Pickup_point']
             
             if ResultCode != 0:
@@ -166,7 +166,7 @@ class  Order_Product_MPESA(APIView):
                 
                 for item in Ordered_Item:
                     
-                    Ordered_Items.objects.create(order_id = order_id, product = mpesa_dict['product'], quantity = mpesa_dict['quantity'], price = mpesa_dict['price'])
+                    Ordered_Items.objects.create(order_id = order_id, product = data['product'], quantity = data['quantity'], price = data['price'])
                 
                 for pickup in pickup_point:
                     
@@ -187,6 +187,9 @@ class  Order_Product_Paypal(APIView):
     serializer_class = OrderSerializer
 
     def post(self, request, format=None):
+                
+        data = request.data
+        serializers = self.serializer_class(data=data)
         
         PPClient = PayPalClient()
         
@@ -195,22 +198,34 @@ class  Order_Product_Paypal(APIView):
         user_id = request.user.id
         
         requestorder = OrdersGetRequest(data)
-        response = PPClient.client.execute(requestorder)
+        response_data = PPClient.client.execute(requestorder)
         
-        Order_item = Product_details.objects.get(pk=review['Order_items']) 
+        total_paid = response_data.result.purchase_units[0].amount.value
+        Ordered_Item    = data['Ordered_Items']
+        pickup_point    = data['Customer_Pickup_point']
+        
+        
+        if serializers.is_valid(raise_exception=True):
                         
-        # or1 = Order( user_id = Account.objects.get(id=data["user_id"]), product = Product_details.objects.get(id=data["product"]), 
-        #         first_name = data["first_name"], last_name = data["last_name"],
-        #         phone_number = data["phone_number"],order_phone_number =data["order_phone_number"], 
-        #         delivery_address = data["delivery_address"], region = data["region"], 
-        #         city = data["city"], delivery_method = data["delivery_method"],
-        #         price =data["price"], CheckoutRequestID = CheckoutRequestID1, 
-        #         MerchantRequestID = MerchantRequestID1, 
-        #         )
-        or1.save()
-        
-        or1.Order_items.add(Order_item)
-        
+            order = Order.objects.create(user_id=data['user_id'], payment_id = response_data.result.id, amount_paid=total_paid,
+                                Payment_method='Paypal',delivery_method=data['delivery_method'], payment_status = True )
+            
+            order_id = order.pk
+            
+            for item in Ordered_Item:
+                
+                Ordered_Items.objects.create(order_id = order_id, product = data['product'], quantity = data['quantity'], price = data['price'])
+            
+            for pickup in pickup_point:
+                
+                Customer_Pickup_point.objects.create(order_id = order_id, user_id=data['user_id'],Station_id = data['Station_id'],
+                                                    first_name=data['user_id'], last_name=data['last_name'], phone_number=data['phone_number'],
+                                                    Delivery_address=data['Delivery_address'], County=data['County'], City=data['City'] )
+                
+            return Response(
+                serializers.data, status=status.HTTP_201_CREATED
+                )
+    
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
