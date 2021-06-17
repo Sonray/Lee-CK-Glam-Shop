@@ -12,6 +12,8 @@ from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, Token
 import requests
 from .mpesa_payments import Lipa_na_mpesa
 import json
+from paypalcheckoutsdk.orders import OrdersGetRequest
+from .paypal import PayPalClient
 
 # Create your views here.
 
@@ -197,7 +199,7 @@ class  Order_Product_Paypal(APIView):
         paypaldata = body["orderID"]
         user_id = request.user.id
         
-        requestorder = OrdersGetRequest(data)
+        requestorder = OrdersGetRequest(paypaldata)
         response_data = PPClient.client.execute(requestorder)
         
         total_paid = response_data.result.purchase_units[0].amount.value
