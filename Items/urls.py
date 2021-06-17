@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.conf.urls import url
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
-from .views import Display_all_products, Display_specific_product, Display_all_Reviews, Make_a_review, Search_products_category, Search_products_subcategory, Search_products,Order_Product_MPESA
+from .views import Display_all_products, Display_specific_product, Order_Product_Paypal, Display_all_Reviews, Make_a_review, Search_products_category, Search_products_subcategory, Search_products,Order_Product_MPESA
 
 urlpatterns = [
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path('search/subcategory/', Search_products_subcategory.as_view(), name='search-subcategory' ),
     path('search/', Search_products.as_view(), name='search' ),
     path('Mpesa-payment/', Order_Product_MPESA.as_view(), name='make_order_mpesa' ),
+    path('paypal-payment/', Order_Product_Paypal.as_view(), name='make_order_paypal' ),
     
 ]
 if settings.DEBUG:
