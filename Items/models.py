@@ -240,34 +240,18 @@ class Paypal_Order_payments(models.Model):
         return self.Paypal_Order_payments
 
 
-class VISA_Order_payments(models.Model):
+class Stripe_Order_payments(models.Model):
     
     class  Meta:
-        verbose_name_plural = 'VISA_Order_payments'
+        verbose_name_plural = 'Stripe_Order_payments'
     
     payment_id              = models.CharField(max_length=50, blank=True, null=True)
     date_paid               = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    user_id                 = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="VISA_Order_payments_user_id")
-    order_id                = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="VISA_Order_payments_Order_id" , null=True, blank= False)
+    user_id                 = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="Stripe_Order_payments_user_id")
+    order_id                = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Stripe_Order_payments_Order_id" , null=True, blank= False)
     amount_paid             = models.IntegerField(blank=True, null=True)
     payment_status          = models.BooleanField(default=False, blank=True, null=True)
             
     def __str__(self):
         return self.VISA_Order_payments
-
-
-class Mastercard_Order_payments(models.Model):
-    
-    class  Meta:
-        verbose_name_plural = 'Mastercard_Order_payments'
-    
-    payment_id              = models.CharField(max_length=50, blank=True, null=True)
-    date_paid               = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    user_id                 = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="Mastercard_Order_payments_user_id")
-    order_id                = models.ForeignKey( Order,on_delete = models.CASCADE , related_name="Mastercard_Order_payments_Order_id" , null=True, blank= False)
-    amount_paid             = models.IntegerField(blank=True, null=True)
-    payment_status          = models.BooleanField(default=False, blank=True, null=True)
-            
-    def __str__(self):
-        return self.Mastercard_Order_payments
 

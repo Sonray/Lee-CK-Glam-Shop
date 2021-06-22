@@ -197,7 +197,6 @@ class  Order_Product_Paypal(APIView):
         
         body = json.loads(request.body)
         paypaldata = body["orderID"]
-        user_id = request.user.id
         
         requestorder = OrdersGetRequest(paypaldata)
         response_data = PPClient.client.execute(requestorder)
