@@ -3,9 +3,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Reviews, Product_details,Order, Ordered_Items, Customer_Pickup_point
+from .models import Reviews, Product_details,Order, Ordered_Items, Customer_Pickup_point, Pickup_stations
 from Authentication.models import  Account
-from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer, MpesaSerializer
+from .serializers import ProductSerializer, ReviewSerializer, OrderSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
@@ -137,44 +137,46 @@ class  Order_Product_MPESA(APIView):
             
             mpesa_dict = Lipa_na_mpesa( phone_number, amount_1)
             
-            ResultCode      = mpesa_dict['ResultCode']
-            payment_id      = mpesa_dict['CallbackMetadata.Item[1].Value']
-            Ordered_Item    = data['Ordered_Items']
-            pickup_point    = data['Customer_Pickup_point']
+            print(mpesa_dict)
+            
+            ResultCode      = mpesa_dict['ResponseCode']
+            payment_id      = mpesa_dict['MerchantRequestID']
+            Ordered_Item    = data['orderitems']
+            pickup_point    = data['customerpick']
             
             if ResultCode != 0:
                 
-                order = Order.objects.create(user_id=data['user_id'], payment_id = payment_id, amount_paid=data['amount_paid'],
+                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']), payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'] )
                 
-                order_id = order.pk
+                order_ids = order.pk
                 
                 for item in Ordered_Item:
                     
-                    Ordered_Items.objects.create(order_id = order_id, product = mpesa_dict['product'], quantity = mpesa_dict['quantity'], price = mpesa_dict['price'])
+                    Ordered_Items.objects.create(order_id = Order.objects.get(id=order_ids), product = Product_details.objects.get(id=item['product']), quantity = item['quantity'], price = item['price'])
                 
                 for pickup in pickup_point:
                     
-                    Customer_Pickup_point.objects.create(order_id = order_id, user_id=data['user_id'],Station_id = data['Station_id'],
-                                                        first_name=data['user_id'], last_name=data['last_name'], phone_number=data['phone_number'],
-                                                        Delivery_address=data['Delivery_address'], County=data['County'], City=data['City'] )
+                    Customer_Pickup_point.objects.create(order_id = Order.objects.get(id=order_ids), user_id=Account.objects.get(id=data['user_id']),Station_id = Pickup_stations.objects.get(id=pickup['Station_id']),
+                                                        first_name=pickup['user_id'], last_name=pickup['last_name'], phone_number=pickup['phone_number'],
+                                                        Delivery_address=pickup['Delivery_address'], County=pickup['County'], City=pickup['City'] )
                 
             else:
                 
-                order = Order.objects.create(user_id=data['user_id'], payment_id = payment_id, amount_paid=data['amount_paid'],
+                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']), payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'], payment_status = True )
                 
-                order_id = order.pk
+                order_ids = order.pk
                 
                 for item in Ordered_Item:
                     
-                    Ordered_Items.objects.create(order_id = order_id, product = data['product'], quantity = data['quantity'], price = data['price'])
+                    Ordered_Items.objects.create(order_id = Order.objects.get(id=order_ids), product = Product_details.objects.get(id=item['product']), quantity = item['quantity'], price = item['price'])
                 
                 for pickup in pickup_point:
                     
-                    Customer_Pickup_point.objects.create(order_id = order_id, user_id=data['user_id'],Station_id = data['Station_id'],
-                                                        first_name=data['user_id'], last_name=data['last_name'], phone_number=data['phone_number'],
-                                                        Delivery_address=data['Delivery_address'], County=data['County'], City=data['City'] )
+                    Customer_Pickup_point.objects.create(order_id = Order.objects.get(id=order_ids), user_id=Account.objects.get(id=data['user_id']),Station_id = Pickup_stations.objects.get(id=pickup['Station_id']),
+                                                        first_name=pickup['first_name'], last_name=pickup['last_name'], phone_number=pickup['phone_number'],
+                                                        Delivery_address=pickup['Delivery_address'], County=pickup['County'], City=pickup['City'] )
                  
                 
             return Response(
@@ -208,20 +210,20 @@ class  Order_Product_Paypal(APIView):
         
         if serializers.is_valid(raise_exception=True):
                         
-            order = Order.objects.create(user_id=data['user_id'], payment_id = response_data.result.id, amount_paid=total_paid,
+            order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']), payment_id = response_data.result.id, amount_paid=total_paid,
                                 Payment_method='Paypal',delivery_method=data['delivery_method'], payment_status = True )
             
-            order_id = order.pk
+            order_ids = order.pk
             
             for item in Ordered_Item:
                 
-                Ordered_Items.objects.create(order_id = order_id, product = data['product'], quantity = data['quantity'], price = data['price'])
+                Ordered_Items.objects.create(order_id = Order.objects.get(id=order_ids), product = Product_details.objects.get(id=item['product']), quantity = item['quantity'], price = item['price'])
             
             for pickup in pickup_point:
                 
-                Customer_Pickup_point.objects.create(order_id = order_id, user_id=data['user_id'],Station_id = data['Station_id'],
-                                                    first_name=data['user_id'], last_name=data['last_name'], phone_number=data['phone_number'],
-                                                    Delivery_address=data['Delivery_address'], County=data['County'], City=data['City'] )
+                Customer_Pickup_point.objects.create(order_id = Order.objects.get(id=order_ids), user_id=Account.objects.get(id=data['user_id']),Station_id = Pickup_stations.objects.get(id=pickup['Station_id']),
+                                                    first_name=pickup['first_name'], last_name=pickup['last_name'], phone_number=pickup['phone_number'],
+                                                    Delivery_address=pickup['Delivery_address'], County=pickup['County'], City=pickup['City'] )
                 
             return Response(
                 serializers.data, status=status.HTTP_201_CREATED

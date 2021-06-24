@@ -4,7 +4,6 @@ from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from django.conf import settings
 from tinymce.models import HTMLField
-from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -103,8 +102,7 @@ class Order(models.Model):
         
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
     date_ordered        = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    Ordered_Items       = models.ManyToManyField('Ordered_Items', blank=False )
-    payment_id          = models.IntegerField(blank=True, null=True)
+    payment_id          = models.CharField(max_length=150,blank=True, null=True)
     amount_paid         = models.IntegerField(blank=True, null=True)
     Payment_method      = models.CharField(max_length=50, blank=True, null=True)
     delivery_method     = models.CharField(max_length=50, blank=True, null=True)
@@ -114,7 +112,14 @@ class Order(models.Model):
     
     def __str__(self):
         return self.delivery_method
+        
+    @property
+    def orderitems(self):
+        return self.order_items_set.all()
     
+    @property
+    def customerpick(self):
+        return self.customer_pickup_point_set.all()
     
     class  Meta:
         verbose_name_plural = 'Orders'
@@ -128,11 +133,7 @@ class Ordered_Items(models.Model):
     product             = models.ForeignKey( Product_details,on_delete = models.CASCADE , related_name="Ordered_Items_product" , null=True, blank= True)
     quantity            = models.IntegerField(blank=True, null=True)
     price               = models.IntegerField(blank=True, null=True)
-    
-    def __str__(self):
-        return self.order_id
-    
-    
+           
     class  Meta:
         verbose_name_plural = 'Ordered_Items'
         ordering = ['-date']
@@ -145,7 +146,7 @@ class Pickup_stations(models.Model):
         
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="Pickup_stations_user_id")
     date                = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    phone_number        = PhoneNumberField(blank=True, null=True)
+    phone_number        = models.CharField(max_length=50,blank=True, null=True)
     Address_Landmark    = models.CharField(max_length=150,blank=True, null=True)
     Address_information = models.CharField(max_length=150,blank=True, null=True)
     service_hours       = models.CharField(max_length=150,blank=True, null=True)
@@ -154,7 +155,6 @@ class Pickup_stations(models.Model):
     
     def __str__(self):
         return self.County
-    
     
     class  Meta:
         verbose_name_plural = 'Pickup_stations'
@@ -169,7 +169,7 @@ class Customer_Pickup_point(models.Model):
     Station_id          = models.ForeignKey( Pickup_stations,on_delete = models.CASCADE , related_name="Pickup_stations" , null=True, blank= False)
     first_name          = models.CharField(max_length=30,blank=True, null=True)
     last_name           = models.CharField(max_length=30,blank=True, null=True)
-    phone_number        = PhoneNumberField(blank=True, null=True)
+    phone_number        = models.CharField(max_length=50,blank=True, null=True)
     Delivery_address    = models.CharField(max_length=150,blank=True, null=True)
     County              = models.CharField(max_length=50,blank=True, null=True)
     City                = models.CharField(max_length=100,blank=True, null=True)
