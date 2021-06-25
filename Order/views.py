@@ -4,13 +4,14 @@ from rest_framework.views import APIView
 from  Items.models import  Product_details
 from .models import Order, Ordered_Items, Customer_Pickup_point, Pickup_stations
 from Authentication.models import  Account
-from .serializers import OrderSerializer
+from .serializers import CustomerPickupSerializer, OrderSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, status
 from Items.mpesa_payments import Lipa_na_mpesa
 import json
 from paypalcheckoutsdk.orders import OrdersGetRequest
 from Items.paypal import PayPalClient
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from .randomnumbergenerator import  generator
 
 # Create your views here.
@@ -133,3 +134,25 @@ class  Order_Product_Paypal(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
+# @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope ))
+class Display_Customer_Pickup(APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    
+    def get_object(self,pk):
+        '''
+        retrieve product object from database
+        '''
+
+        try:
+            return Customer_Pickup_point.objects.filter(user_id=pk)
+        except Customer_Pickup_point.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+
+    def get(self, request, pk, format=None):
+        '''
+        get a single product object with its details
+        '''
+
+        product=self.get_object(pk)
+        serializers=CustomerPickupSerializer(product, many=True)
+        return Response(serializers.data) 
