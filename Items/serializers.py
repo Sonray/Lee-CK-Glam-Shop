@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product_details, Reviews, Order, Ordered_Items, Customer_Pickup_point
+from .models import Product_details, Reviews
 from  Authentication.models import  Account
 from rest_framework.response import Response
 
@@ -11,38 +11,7 @@ class ProductSerializer(serializers.ModelSerializer):
         exclude = ('admin_id',)
         depth = 1
 
-class OrderedItemSerializer(serializers.ModelSerializer):
-        
-    class Meta:
-        model = Ordered_Items
-        fields = '__all__'
 
-    
-class CustomerPickupSerializer(serializers.ModelSerializer):
-        
-    class Meta:
-        model = Customer_Pickup_point
-        fields = '__all__'
-    
-        
-class OrderSerializer(serializers.ModelSerializer):
-    
-    orderitems      = OrderedItemSerializer(many=True)
-    customerpick    = CustomerPickupSerializer(many=True)
-    
-    class Meta:
-        model = Order
-        fields = [
-            'user_id',
-            'payment_id',
-            'amount_paid',
-            'Payment_method',
-            'delivery_method',
-            'orderitems',
-            'customerpick',
-            ]
-    
-    
 class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
