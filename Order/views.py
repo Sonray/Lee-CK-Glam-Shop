@@ -42,12 +42,11 @@ class  Order_Product_MPESA(APIView):
             Ordered_Item    = data['orderitems']
             pickup_point    = data['customerpick']
             
-            gug = generator(InstanceCheckMeta)
-            print(gug)
+            randomID = generator(InstanceCheckMeta)
             
             if ResultCode != 0:
                 
-                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = gug, payment_id = payment_id, amount_paid=amount_1,
+                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = randomID, payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'] )
                 
                 order_ids = order.pk
@@ -64,7 +63,7 @@ class  Order_Product_MPESA(APIView):
                 
             else:
                 
-                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']), payment_id = payment_id, amount_paid=amount_1,
+                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = randomID, payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'], payment_status = True )
                 
                 order_ids = order.pk
@@ -108,10 +107,11 @@ class  Order_Product_Paypal(APIView):
         Ordered_Item    = data['Ordered_Items']
         pickup_point    = data['Customer_Pickup_point']
         
+        randomID = generator(InstanceCheckMeta)
         
         if serializers.is_valid(raise_exception=True):
                         
-            order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']), payment_id = response_data.result.id, amount_paid=total_paid,
+            order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = randomID, payment_id = response_data.result.id, amount_paid=total_paid,
                                 Payment_method='Paypal',delivery_method=data['delivery_method'], payment_status = True )
             
             order_ids = order.pk
