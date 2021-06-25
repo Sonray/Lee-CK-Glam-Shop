@@ -155,7 +155,31 @@ class Display_Customer_Pickup(APIView):
         product=self.get_object(pk)
         serializers=CustomerPickupSerializer(product, many=True)
         return Response(serializers.data) 
+        
 
+@permission_classes((permissions.AllowAny, ))
+class Delete_Customer_Address(APIView):
+    
+    def get_object(self,pk):
+        '''
+        retrieve product object from database
+        '''
+
+    def get(self, request, pk, format=None):
+        '''
+        get a single product object with its details
+        '''
+
+        try:            
+            Address = Customer_Pickup_point.objects.get(pk=pk)
+            Address.delete()
+            
+            return Response(
+                 status=status.HTTP_201_CREATED
+                )
+        
+        except Customer_Pickup_point.DoesNotExist:
+            return Response( status=status.HTTP_400_BAD_REQUEST)
 
 @permission_classes((permissions.AllowAny, ))
 class Display_all_pickupstations(APIView):
