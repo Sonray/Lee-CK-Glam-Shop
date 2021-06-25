@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from  Items.models import  Product_details
 from .models import Order, Ordered_Items, Customer_Pickup_point, Pickup_stations
 from Authentication.models import  Account
-from .serializers import CustomerPickupSerializer, OrderSerializer, PickupStationSerializer
+from .serializers import CustomerPickupSerializer, OrderSerializer, PickupStationSerializer, TheOrderSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, status
 from Items.mpesa_payments import Lipa_na_mpesa
@@ -134,7 +134,6 @@ class  Order_Product_Paypal(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
-# @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope ))
 class Display_Customer_Pickup(APIView):
     permission_classes = [permissions.IsAuthenticated,]
     
@@ -166,4 +165,26 @@ class Display_all_pickupstations(APIView):
         serializers = PickupStationSerializer(all_post, many=True)
         return Response(serializers.data)
         
-  
+
+@permission_classes((permissions.AllowAny, ))
+class Display_Customer_Order(APIView):
+    
+    def get_object(self,pk):
+        '''
+        retrieve product object from database
+        '''
+
+        try:
+            return Order.objects.filter(user_id=pk)
+        except Order.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+
+    def get(self, request, pk, format=None):
+        '''
+        get a single product object with its details
+        '''
+
+        product=self.get_object(pk)
+        serializers=TheOrderSerializer(product, many=True)
+        return Response(serializers.data) 
+

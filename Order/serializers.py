@@ -29,6 +29,13 @@ class PickupStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pickup_stations
         fields = '__all__'
+
+    
+class TheOrderSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = Order
+        fields = '__all__'
     
         
 class OrderSerializer(serializers.ModelSerializer):
