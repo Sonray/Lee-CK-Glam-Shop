@@ -29,7 +29,7 @@ class Display_specific_product(APIView):
         try:
             return Product_details.objects.get(pk=pk)
         except Product_details.DoesNotExist:
-            raise Http404
+            raise status.HTTP_404_NOT_FOUND
 
     def get(self, request, pk, format=None):
         '''
@@ -72,7 +72,7 @@ class Display_all_Reviews(APIView):
         try:
             return Reviews.objects.filter(product=pk)
         except Reviews.DoesNotExist:
-            raise Http404
+            raise status.HTTP_404_NOT_FOUND
 
     def get(self, request, pk, format=None):
         '''
