@@ -54,7 +54,6 @@ class Pending_OrderAdmin(admin.ModelAdmin):
     
 # Register your models here.
 
-admin.site.register( Product_details, ProductAdmin )
 admin.site.register( Order, OrderAdmin )
 admin.site.register( Ordered_Items, Ordered_ItemsAdmin )
 admin.site.register( Pickup_stations, Pickup_stationsAdmin )

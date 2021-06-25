@@ -22,6 +22,7 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url(r'',include('Authentication.urls')),
     url(r'',include('Items.urls')),
+    url(r'',include('Order.urls')),
     url(r'api/token/', TokenObtainPairView.as_view()),
     url(r'api/token/refresh/', TokenRefreshView.as_view()),
     path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),

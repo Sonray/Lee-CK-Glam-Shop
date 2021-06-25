@@ -42,6 +42,7 @@ AUTH_USER_MODEL = 'Authentication.Account'
 INSTALLED_APPS = [
     'Authentication',
     'Items',
+    'Order',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
