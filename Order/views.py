@@ -1,3 +1,4 @@
+from django.db.models.query import InstanceCheckMeta
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from  Items.models import  Product_details
@@ -10,7 +11,11 @@ from Items.mpesa_payments import Lipa_na_mpesa
 import json
 from paypalcheckoutsdk.orders import OrdersGetRequest
 from Items.paypal import PayPalClient
+from .randomnumbergenerator import  generator
+
 # Create your views here.
+
+
 
 @permission_classes((permissions.AllowAny,)) 
 class  Order_Product_MPESA(APIView):
@@ -37,9 +42,12 @@ class  Order_Product_MPESA(APIView):
             Ordered_Item    = data['orderitems']
             pickup_point    = data['customerpick']
             
+            gug = generator(InstanceCheckMeta)
+            print(gug)
+            
             if ResultCode != 0:
                 
-                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']), payment_id = payment_id, amount_paid=amount_1,
+                order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = gug, payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'] )
                 
                 order_ids = order.pk

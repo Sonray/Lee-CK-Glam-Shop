@@ -4,17 +4,17 @@ from  .models import Product_details, Order, Paypal_Order_payments,Mpesa_Order_p
 #change Admin page appearance
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display        = ('id','user_id','date_ordered', 'payment_id', 'amount_paid', 'Payment_method', 'delivery_method', 'payment_status', 'order_status')
-    search_fields       =  ('user_id', 'date_ordered', 'payment_id', 'amount_paid', 'Payment_method', 'delivery_method', 'payment_status', 'order_status')
+    list_display        = ('id','user_id','date_ordered','order_id', 'payment_id', 'amount_paid', 'Payment_method', 'delivery_method', 'payment_status', 'order_status')
+    search_fields       =  ('user_id', 'date_ordered','order_id', 'payment_id', 'amount_paid', 'Payment_method', 'delivery_method', 'payment_status', 'order_status')
     # readonly_fields     = ('date_joined', 'last_login',)
-    ordering            = ('date_ordered',)
+    ordering            = ('-date_ordered',)
 
 
 class Ordered_ItemsAdmin(admin.ModelAdmin):
     list_display        = ('id','order_id','date', 'product', 'quantity', 'price')
-    search_fields       = ('id','order_id','date', 'product', 'quantity', 'price')
+    search_fields       = ('id','order_id__order_id','date', 'product__product_name', 'quantity', 'price')
     # readonly_fields     = ('date_joined', 'last_login',)
-    ordering            = ('date',)
+    ordering            = ('-date',)
     
 
 class Pickup_stationsAdmin(admin.ModelAdmin):

@@ -15,6 +15,7 @@ class Order(models.Model):
         
     user_id             = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank= True , null=True , related_name="User_order")
     date_ordered        = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    order_id            = models.CharField(max_length=50, blank=False, null=False, unique=True, default='ABC123')
     payment_id          = models.CharField(max_length=150,blank=True, null=True)
     amount_paid         = models.IntegerField(blank=True, null=True)
     Payment_method      = models.CharField(max_length=50, blank=True, null=True)
@@ -24,7 +25,7 @@ class Order(models.Model):
     
     
     def __str__(self):
-        return self.delivery_method
+        return self.order_id
         
     @property
     def orderitems(self):
