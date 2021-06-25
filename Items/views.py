@@ -64,7 +64,7 @@ class Make_a_review(APIView):
 
 
 @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope )) 
-class Display_a_Reviews(APIView):
+class Display_all_Reviews(APIView):
     permission_classes = [permissions.IsAuthenticated,]
 
     def get_object(self,pk):
@@ -86,16 +86,7 @@ class Display_a_Reviews(APIView):
         serializers=ReviewSerializer(review, many=True)
         return Response(serializers.data) 
 
-@permission_classes((permissions.IsAuthenticated, TokenHasReadWriteScope))
-class Display_all_products(APIView):
-    permission_classes = [permissions.IsAuthenticated,]
-    
-    def get(self, request, format=None):
-        all_post = Reviews.objects.all()
-        serializers = ReviewSerializer(all_post, many=True)
-        return Response(serializers.data)
-     
-     
+
 @permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope )) 
 class Search_products_category(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]

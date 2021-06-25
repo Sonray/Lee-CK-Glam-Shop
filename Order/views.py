@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from  Items.models import  Product_details
 from .models import Order, Ordered_Items, Customer_Pickup_point, Pickup_stations
 from Authentication.models import  Account
-from .serializers import CustomerPickupSerializer, OrderSerializer
+from .serializers import CustomerPickupSerializer, OrderSerializer, PickupStationSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, status
 from Items.mpesa_payments import Lipa_na_mpesa
@@ -156,3 +156,14 @@ class Display_Customer_Pickup(APIView):
         product=self.get_object(pk)
         serializers=CustomerPickupSerializer(product, many=True)
         return Response(serializers.data) 
+
+
+@permission_classes((permissions.AllowAny, ))
+class Display_all_pickupstations(APIView):
+    
+    def get(self, request, format=None):
+        all_post = Pickup_stations.objects.all()
+        serializers = PickupStationSerializer(all_post, many=True)
+        return Response(serializers.data)
+        
+  

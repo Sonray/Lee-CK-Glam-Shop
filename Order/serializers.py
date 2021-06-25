@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Items.models import Product_details
-from .models import Order, Ordered_Items, Customer_Pickup_point
+from .models import Order, Ordered_Items, Customer_Pickup_point, Pickup_stations
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -21,6 +21,13 @@ class CustomerPickupSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = Customer_Pickup_point
+        fields = '__all__'
+
+    
+class PickupStationSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = Pickup_stations
         fields = '__all__'
     
         
