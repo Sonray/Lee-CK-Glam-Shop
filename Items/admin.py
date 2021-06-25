@@ -1,5 +1,5 @@
 from django.contrib import admin
-from  .models import Product_details, Order, Reviews,Category,Sub_category,Product_images,Stripe_Order_payments,Paypal_Order_payments,Mpesa_Order_payments,Customer_Pickup_point,Pickup_stations, Ordered_Items, Order_Received_by_Customer,Pending_Order
+from  .models import Product_details, Order, Reviews,Category,Sub_category,Product_images,Paypal_Order_payments,Mpesa_Order_payments,Customer_Pickup_point,Pickup_stations, Ordered_Items, Order_Received_by_Customer,Pending_Order
 
 #change Admin page appearance
 
