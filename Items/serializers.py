@@ -17,7 +17,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
         fields = "__all__"
-        depth = 1
         
     
     def validate(self, data):

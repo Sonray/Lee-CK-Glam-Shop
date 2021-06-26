@@ -11,7 +11,7 @@ class AccountAdmin(UserAdmin):
     ordering            = ('email',)
 
     filter_horizontal   = ()
-    list_filter         = ()
+    list_filter         = ('date_joined', 'is_admin', 'is_staff',)
     fieldsets           = ()
 
 admin.site.register(Account, AccountAdmin)

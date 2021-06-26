@@ -15,7 +15,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['email', 'first_name', 'last_name', 'phone_number', 'password' ]
-        exclude = ('password',)
+        
         
     def validate(self, attrs):
         email = attrs.get('email', '')

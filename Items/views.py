@@ -9,9 +9,8 @@ from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, Token
 # Create your views here.
 
 
-@permission_classes((permissions.IsAuthenticated, TokenHasReadWriteScope))
+@permission_classes((permissions.AllowAny, ))
 class Display_all_products(APIView):
-    permission_classes = [permissions.IsAuthenticated,]
     
     def get(self, request, format=None):
         all_post = Product_details.objects.all()
@@ -19,9 +18,8 @@ class Display_all_products(APIView):
         return Response(serializers.data)
         
         
-@permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope ))
+@permission_classes((permissions.AllowAny, ))
 class Display_specific_product(APIView):
-    permission_classes = [permissions.IsAuthenticated,]
     
     def get_object(self,pk):
         '''
@@ -43,7 +41,7 @@ class Display_specific_product(APIView):
         return Response(serializers.data) 
 
 
-@permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope))
+@permission_classes((permissions.AllowAny, ))
 class Make_a_review(APIView):    
 
     serializer_class = ReviewSerializer
@@ -63,9 +61,8 @@ class Make_a_review(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope )) 
+@permission_classes((permissions.AllowAny, )) 
 class Display_all_Reviews(APIView):
-    permission_classes = [permissions.IsAuthenticated,]
 
     def get_object(self,pk):
         '''
@@ -87,9 +84,8 @@ class Display_all_Reviews(APIView):
         return Response(serializers.data) 
 
 
-@permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope )) 
+@permission_classes((permissions.AllowAny, )) 
 class Search_products_category(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
     
     queryset = Product_details.objects.all()
     serializer_class = ProductSerializer
@@ -97,9 +93,8 @@ class Search_products_category(generics.ListAPIView):
     search_fields = ['category__category']
     
     
-@permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope)) 
+@permission_classes((permissions.AllowAny, )) 
 class Search_products_subcategory(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
     
     queryset = Product_details.objects.all()
     serializer_class = ProductSerializer
