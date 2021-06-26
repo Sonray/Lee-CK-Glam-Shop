@@ -8,7 +8,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields       =  ('user_id__email', 'date_ordered','order_id', 'payment_id', 'amount_paid', 'Payment_method', 'delivery_method', 'payment_status', 'order_status')
     ordering            = ('-date_ordered',)
     list_filter         = ('date_ordered', 'delivery_method', 'delivery_method', 'payment_status', 'order_status', )
-
+    
 
 class Ordered_ItemsAdmin(admin.ModelAdmin):
     list_display        = ('order_id','date', 'product', 'quantity', 'price')

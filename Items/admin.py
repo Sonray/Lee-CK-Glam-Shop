@@ -8,6 +8,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields       =  ('product_name', 'new_price', 'product_description', 'key_features','in_the_box', 'specifications','date_uploaded')
     list_filter         = ('date_uploaded', 'new_price', )
     ordering            = ('product_name',)
+    filter_horizontal   = ('category', 'sub_category',)
     
 
 class ReviewAdmin(admin.ModelAdmin):
