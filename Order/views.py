@@ -165,7 +165,7 @@ class Delete_Customer_Address(APIView):
         retrieve product object from database
         '''
 
-    def get(self, request, pk, format=None):
+    def delete(self, request, pk, format=None):
         '''
         get a single product object with its details
         '''
@@ -234,4 +234,39 @@ class Display_Order_Items(APIView):
         product=self.get_object(pk)
         serializers=OrderedItemSerializer(product, many=True)
         return Response(serializers.data) 
+    
+    
+@permission_classes((permissions.AllowAny, ))
+class Update_Customer_Pickup(APIView):
+    
+    serializer_class = CustomerPickupSerializer
+        
+    def get_object(self,pk):
+        '''
+        retrieve product object from database
+        '''
+
+        try:
+            return Customer_Pickup_point.objects.get(pk=pk)
+        except Customer_Pickup_point.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+
+    def put(self, request, pk, format=None):
+        '''
+        get a single product object with its details
+        '''
+
+        product=self.get_object(pk)
+        review = request.data
+        serializers=CustomerPickupSerializer(product, data=review)
+        # serializers = self.serializer_class(data=review)
+        
+        if serializers.is_valid(raise_exception=True):
+    
+            serializers.save()
+
+            return Response(
+                serializers.data, status=status.HTTP_201_CREATED
+                )
+        return Response(serializers.errors, serializers.data, status=status.HTTP_400_BAD_REQUEST)
 
