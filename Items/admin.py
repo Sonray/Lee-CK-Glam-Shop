@@ -9,6 +9,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter         = ('date_uploaded', 'new_price', )
     ordering            = ('product_name',)
     filter_horizontal   = ('category', 'sub_category',)
+    raw_id_fields       = ('admin_id',)
     
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -16,6 +17,7 @@ class ReviewAdmin(admin.ModelAdmin):
     search_fields       =  ('user_id','date_reviewed', 'product', 'Product_review', 'product_rating')
     ordering            = ('date_reviewed',)
     list_filter         = ('date_reviewed', )
+    raw_id_fields       = ('product', 'user_id',)
     
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -28,12 +30,14 @@ class SubCategoryAdmin(admin.ModelAdmin):
     list_display        = ('category','sub_category',)
     search_fields       =  ('category','sub_category',)
     ordering            = ('sub_category',)
+    raw_id_fields       = ('category', )
     
     
 class Product_imagesAdmin(admin.ModelAdmin):
     list_display        = ('product','image', )
     search_fields       = ('product','image', )
     ordering            = ('product',)
+    raw_id_fields       = ('product', )
     
     
 # Register your models here.

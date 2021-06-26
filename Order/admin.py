@@ -8,13 +8,14 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields       =  ('user_id__email', 'date_ordered','order_id', 'payment_id', 'amount_paid', 'Payment_method', 'delivery_method', 'payment_status', 'order_status')
     ordering            = ('-date_ordered',)
     list_filter         = ('date_ordered', 'delivery_method', 'delivery_method', 'payment_status', 'order_status', )
-    
+    raw_id_fields       = ('user_id',)
 
 class Ordered_ItemsAdmin(admin.ModelAdmin):
     list_display        = ('order_id','date', 'product', 'quantity', 'price')
     search_fields       = ('order_id__order_id','date', 'product__product_name', 'quantity', 'price')
     ordering            = ('-date',)
     list_filter         = ('date', 'order_id', )
+    raw_id_fields       = ('order_id', 'product',)
 
 
 class Pickup_stationsAdmin(admin.ModelAdmin):
@@ -22,6 +23,7 @@ class Pickup_stationsAdmin(admin.ModelAdmin):
     search_fields       = ('user_id__email','date', 'phone_number', 'Address_Landmark', 'Address_information', 'service_hours', 'County', 'City')
     ordering            = ('Address_information',)
     list_filter         = ('date', 'County', 'City', )
+    raw_id_fields       = ('user_id', )
     
 
 class Customer_PickupAdmin(admin.ModelAdmin):
@@ -29,13 +31,23 @@ class Customer_PickupAdmin(admin.ModelAdmin):
     search_fields       = ('id','user_id__email','date', 'order_id__order_id', 'Station_id__County', 'first_name', 'last_name','phone_number', 'Delivery_address', 'County', 'City')
     ordering            = ('-date',)
     list_filter         = ('date', 'order_id', 'County', 'City', 'Station_id',)
+    raw_id_fields       = ('user_id', 'order_id', 'Station_id', )
     
 
 class Mpesa_OrderAdmin(admin.ModelAdmin):
-    list_display        = ('id','user_id','date_paid', 'payment_id', 'order_id', 'amount_paid', 'payment_status')
-    search_fields       = ('id','user_id__email','date_paid', 'payment_id', 'order_id__order_id', 'amount_paid', 'payment_status')
+    list_display        = ('id','user_id','date_paid', 'payment_id', 'order_id', 'amount_paid', 'payment_status', 'phone_number')
+    search_fields       = ('id','user_id__email','date_paid', 'payment_id', 'order_id__order_id', 'amount_paid', 'payment_status', 'phone_number' )
     ordering            = ('-date_paid',)
     list_filter         = ('date_paid', 'payment_status', )
+    raw_id_fields       = ('order_id', )
+    
+
+class Paypal_OrderAdmin(admin.ModelAdmin):
+    list_display        = ('id','user_id','date_paid', 'payment_id', 'order_id', 'amount_paid', 'payment_status', 'email')
+    search_fields       = ('id','user_id__email','date_paid', 'payment_id', 'order_id__order_id', 'amount_paid', 'email')
+    ordering            = ('-date_paid',)
+    list_filter         = ('date_paid', 'payment_status', )
+    raw_id_fields       = ('order_id', )
     
 
 class Order_Received_by_CustomerAdmin(admin.ModelAdmin):
@@ -43,6 +55,7 @@ class Order_Received_by_CustomerAdmin(admin.ModelAdmin):
     search_fields       = ('id','order_id__order_id','date',)
     ordering            = ('-date',)
     list_filter         = ('date', )
+    raw_id_fields       = ('order_id', )
     
 
 class Pending_OrderAdmin(admin.ModelAdmin):
@@ -50,6 +63,7 @@ class Pending_OrderAdmin(admin.ModelAdmin):
     search_fields       = ('id','order_id__order_id','date', 'order_received_by_customer',)
     ordering            = ('-date',)
     list_filter         = ('date', 'order_received_by_customer', )
+    raw_id_fields       = ('order_id', )
         
     
 # Register your models here.
@@ -59,6 +73,6 @@ admin.site.register( Ordered_Items, Ordered_ItemsAdmin )
 admin.site.register( Pickup_stations, Pickup_stationsAdmin )
 admin.site.register( Customer_Pickup_point, Customer_PickupAdmin )
 admin.site.register( Mpesa_Order_payments, Mpesa_OrderAdmin )
-admin.site.register( Paypal_Order_payments, Mpesa_OrderAdmin )
+admin.site.register( Paypal_Order_payments, Paypal_OrderAdmin )
 admin.site.register( Order_Received_by_Customer, Order_Received_by_CustomerAdmin )
 admin.site.register( Pending_Order, Pending_OrderAdmin )

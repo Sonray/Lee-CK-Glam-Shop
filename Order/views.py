@@ -2,7 +2,7 @@ from django.db.models.query import InstanceCheckMeta
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from  Items.models import  Product_details
-from .models import Order, Ordered_Items, Customer_Pickup_point, Pickup_stations
+from .models import Order, Ordered_Items, Customer_Pickup_point, Paypal_Order_payments, Pickup_stations, Mpesa_Order_payments
 from Authentication.models import  Account
 from .serializers import CustomerPickupSerializer, OrderSerializer,OrderedItemSerializer, PickupStationSerializer, TheOrderSerializer
 from rest_framework.decorators import permission_classes
@@ -49,7 +49,7 @@ class  Order_Product_MPESA(APIView):
                 
                 order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = randomID, payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'] )
-                
+                                
                 order_ids = order.pk
                 
                 for item in Ordered_Item:
@@ -66,6 +66,12 @@ class  Order_Product_MPESA(APIView):
                 
                 order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = randomID, payment_id = payment_id, amount_paid=amount_1,
                                     Payment_method='M-Pesa',delivery_method=data['delivery_method'], payment_status = True )
+                
+                Mpesa_Order_payments.create(user_id=Account.objects.get(id=data['user_id']), 
+                                            payment_id = data['Body.CallbackMetadata.Item[1].Value'], 
+                                            order_id =randomID, amount_paid = data['Body.CallbackMetadata.Item[0].Value'], 
+                                            phone_number = data['Body.CallbackMetadata.Item[3].Value'], 
+                                            payment_status=True )
                 
                 order_ids = order.pk
                 
@@ -114,7 +120,14 @@ class  Order_Product_Paypal(APIView):
                         
             order = Order.objects.create(user_id=Account.objects.get(id=data['user_id']),order_id = randomID, payment_id = response_data.result.id, amount_paid=total_paid,
                                 Payment_method='Paypal',delivery_method=data['delivery_method'], payment_status = True )
-            
+                        
+            Paypal_Order_payments.create(user_id=Account.objects.get(id=data['user_id']), 
+                                        payment_id = response_data.result.id, 
+                                        order_id =randomID, 
+                                        amount_paid = response_data.result.purchase_units[0].amount.value, 
+                                        email = response_data.result.payer.email_address, 
+                                        payment_status=True )
+                        
             order_ids = order.pk
             
             for item in Ordered_Item:
