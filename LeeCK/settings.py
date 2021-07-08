@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'tinymce',
     'phonenumber_field',
     'corsheaders',
+    'taggit',
 ]
 
 MIDDLEWARE = [

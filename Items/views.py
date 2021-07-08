@@ -4,7 +4,7 @@ from .models import Reviews, Product_details
 from .serializers import ProductSerializer, ReviewSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, generics, status, filters
-from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 
@@ -102,15 +102,21 @@ class Search_products_subcategory(generics.ListAPIView):
     search_fields = ['sub_category__sub_category']
     
     
-@permission_classes((permissions.IsAuthenticated, TokenHasScope, TokenHasReadWriteScope)) 
+@permission_classes((permissions.AllowAny, )) 
 class Search_products(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    
+    queryset = Product_details.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [ '$sub_category__sub_category', '$sub_category__sub_category',
+                     '$product_description', '$product_name', '$new_price',
+                     '$specifications', '$key_features' ]
+    
+
+@permission_classes((permissions.AllowAny, )) 
+class Search_product_Tag(generics.ListAPIView):
     
     queryset = Product_details.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = [ '^sub_category__sub_category', '^sub_category__sub_category',
-                     '^product_description', '^product_name', 'new_price',
-                     '^specifications__product_specification', '^key_features__product_feature' ]
-    
-
+    search_fields = ['tags__name']

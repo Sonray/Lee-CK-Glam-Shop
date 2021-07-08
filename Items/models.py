@@ -1,9 +1,8 @@
 from django.db import models
-from  Authentication.models import  Account
-from cloudinary.models import CloudinaryField
-from django.utils import timezone
 from django.conf import settings
-from tinymce.models import HTMLField
+from tinymce import models as tinymce_models
+from taggit.managers import TaggableManager
+
 
 # Create your models here.
 
@@ -20,10 +19,11 @@ class  Product_details(models.Model):
     date_uploaded       = models.DateTimeField( auto_now_add = True, null =True)
     old_price           = models.IntegerField(blank=True, null=True)
     new_price           = models.IntegerField(blank=True, null=True)
-    product_description = HTMLField(blank=True, null=True)
-    key_features        = HTMLField(blank=True, null=True)
-    in_the_box          = HTMLField(blank=True, null=True)
-    specifications      = HTMLField(blank=True, null=True)
+    product_description = tinymce_models.HTMLField(blank=True, null=True)
+    key_features        = tinymce_models.HTMLField(blank=True, null=True)
+    in_the_box          = tinymce_models.HTMLField(blank=True, null=True)
+    specifications      = tinymce_models.HTMLField(blank=True, null=True)
+    tags                = TaggableManager()
     
     def __str__(self):
         return self.product_name

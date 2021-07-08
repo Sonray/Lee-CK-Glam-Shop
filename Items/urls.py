@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from .views import Display_all_products, Display_specific_product, Display_all_Reviews, Make_a_review, Search_products_category, Search_products_subcategory, Search_products
+from .views import Display_all_products, Display_specific_product, Search_product_Tag, Display_all_Reviews, Make_a_review, Search_products_category, Search_products_subcategory, Search_products
 
 urlpatterns = [
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path('search/category/', Search_products_category.as_view(), name='search-category' ),
     path('search/subcategory/', Search_products_subcategory.as_view(), name='search-subcategory' ),
     path('search/', Search_products.as_view(), name='search' ),
+    path('product-tag/', Search_product_Tag.as_view(), name='search' ),
     
 ]
 if settings.DEBUG:

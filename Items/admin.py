@@ -4,9 +4,9 @@ from  .models import Product_details, Reviews,Category,Sub_category,Product_imag
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display        = ('product_name','date_uploaded', 'old_price', 'new_price', 'product_description', 'key_features', 'in_the_box', 'specifications')
-    search_fields       =  ('product_name', 'new_price', 'product_description', 'key_features','in_the_box', 'specifications','date_uploaded')
-    list_filter         = ('date_uploaded', 'new_price', )
+    list_display        = ('product_name','date_uploaded', 'old_price', 'new_price', 'product_description', 'key_features', 'in_the_box', 'specifications',)
+    search_fields       =  ('product_name', 'tags__name', 'new_price', 'product_description', 'key_features','in_the_box', 'specifications','date_uploaded',)
+    list_filter         = ('date_uploaded', 'new_price', 'tags',  )
     ordering            = ('product_name',)
     filter_horizontal   = ('category', 'sub_category',)
     raw_id_fields       = ('admin_id',)
