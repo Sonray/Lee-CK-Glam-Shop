@@ -89,8 +89,8 @@ class Search_products_category(generics.ListAPIView):
     
     queryset = Product_details.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['category__category']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['category__category', 'sub_category__sub_category']
     
     
 @permission_classes((permissions.AllowAny, )) 
@@ -98,7 +98,7 @@ class Search_products_subcategory(generics.ListAPIView):
     
     queryset = Product_details.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['sub_category__sub_category']
     
     
